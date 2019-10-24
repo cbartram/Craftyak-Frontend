@@ -12,3 +12,24 @@ a {
   line-height: inherit;
   cursor: pointer;
 }
+
+.ui.card {
+  position: relative;
+  -webkit-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  margin-bottom: 2.5rem;
+  border-radius: 18px;
+  -webkit-box-shadow: 0 19px 20px 0 rgba(0,0,0,.05);
+  box-shadow: 0 19px 20px 0 rgba(0,0,0,.05);
+  background-color: #fff;
+  /*width: 100%;*/
+}
+
+.ui.card > .image {
+  position: relative;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+}

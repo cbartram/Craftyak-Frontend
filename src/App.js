@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import withContainer from "./components/withContainer";
 import {
     Header,
@@ -7,6 +7,9 @@ import {
     Menu,
     Segment,
     Sidebar,
+    Card,
+    Grid,
+    Image
 } from 'semantic-ui-react'
 import './App.css';
 import {getProducts} from "./actions/actions";
@@ -40,22 +43,52 @@ class App extends Component {
                       visible
                       width='thin'
                   >
-                      <Menu.Item as='a'>
-                          <Icon name='home' />
-                          Home
+                      <Menu.Item as="h4">
+                          Filters
+                          <Icon name="filter" />
                       </Menu.Item>
-                      <Menu.Item as='a'>
-                          <Icon name='gamepad' />
-                          Games
+                      <Menu.Item as="a">
+                          <Icon name="list" />
+                          Category
                       </Menu.Item>
-                      <Menu.Item as='a'>
-                          <Icon name='camera' />
-                          Channels
+                      <Menu.Item as="a">
+                          <Icon name="dollar sign" />
+                          Price
+                      </Menu.Item>
+                      <Menu.Item as="a">
+                          <Icon name="paint brush" />
+                            Colors
                       </Menu.Item>
                   </Sidebar>
                   <Sidebar.Pusher>
                       <Segment basic>
                           <Header as='h3'>Application Content</Header>
+                          <Grid doubling columns={3}>
+                              {
+                                this.props.products.items.map(product => {
+                                   return (
+                                       <Grid.Column>
+                                       <Card>
+                                        <Image src={product.heroImage} wrapped ui={false} />
+                                        <Card.Content>
+                                            <Card.Header>{product.name}</Card.Header>
+                                            <Card.Meta>
+                                                <span className='date'>${product.price}</span>
+                                            </Card.Meta>
+                                            <Card.Description>
+                                                {product.description}
+                                            </Card.Description>
+                                        </Card.Content>
+                                        <Card.Content extra>
+                                                <Icon name="truck" />
+                                                Shipping {product.processingTime} days
+                                        </Card.Content>
+                                    </Card>
+                                   </Grid.Column>
+                                   )
+                                })
+                              }
+                          </Grid>
                       </Segment>
                   </Sidebar.Pusher>
               </Sidebar.Pushable>
