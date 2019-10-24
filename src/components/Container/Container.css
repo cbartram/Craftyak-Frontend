@@ -1,6 +1,7 @@
 .container-fluid {
     padding: 0;
-    background-color: #fafafa;
+    background-color: #fff;
+    margin-top: 50px; /* to offset navbar */
 }
 
 .no-scroll {

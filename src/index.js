@@ -10,10 +10,11 @@ import {ApolloClient} from 'apollo-client'
 import {ApolloProvider} from "react-apollo";
 import rootReducer from './reducers/rootReducer';
 import Router from './components/Router/Router'
-import './index.css';
 import { dispatchProcessMiddleware } from './util';
 import { DEV_URL, IS_PROD, PROD_URL, INITIAL_STATE } from './constants'
 import * as serviceWorker from './serviceWorker';
+import 'semantic-ui-css/semantic.min.css'
+import './index.css';
 
 // Setup Redux middleware and store
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

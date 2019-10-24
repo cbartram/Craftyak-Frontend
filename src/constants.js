@@ -3,8 +3,7 @@
  * Constants as the name suggests are constant and never change regardless of state changes.
  * @type {{}}
  */
-export const INITIAL_STATE = {
-};
+export const INITIAL_STATE = {};
 
 /**
  * Helper function which determines the correct API to hit (prod,dev) and the correct region to use.
@@ -30,17 +29,20 @@ export const getRequestUrl = (endpointURI) => {
  * @type {boolean} True if the application is running in prod and false otherwise.
  */
 export const IS_PROD = window.location.hostname !== 'localhost' || process.env.REACT_APP_NODE_ENV === 'production';
+
+//Endpoints
+export const GET_ALL_PRODUCTS_ENDPOINT = '/api/v1/products/';
+
 // Prod Params
 export const PROD_URL = 'https://2147bwmah5.execute-api.us-east-1.amazonaws.com/prod';
-
 // Dev Params
-export const DEV_URL = 'https://5c5aslvp9k.execute-api.us-east-1.amazonaws.com/dev';
+export const DEV_URL = 'http://localhost:8080';
 
 // Configuration Params
 export const API_KEY = 'pgS8gGvkv53xFg4BdgECn38C4CDNZXKj8EqFtQdW';
 export const PROD_API_KEY = 'mNer7Typlc9npqrkThXZ08xAIWoBXLyG2NEfHDd2';
 
 // Redux Action/Reducer Constants
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const GET_PRODUCTS_REQUEST = 'GET_PRODUCTS_REQUEST';
+export const GET_PRODUCTS_SUCCESS = 'GET_PRODUCTS_SUCCESS';
+export const GET_PRODUCTS_FAILURE = 'GET_PRODUCTS_FAILURE';

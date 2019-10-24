@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import isNil from 'lodash/isNil';
+import {getRequestUrl} from "./constants";
 let currentStore;
 // Object holding action types as keys and promises as values which need resolutions
 const typeResolvers = {};
@@ -81,6 +82,74 @@ export const matchSearchQuery = (query, element, green = false) => {
 
     // The query is not found simply return the full element
     return <p className="mb-1 text-truncate muted">{element}</p>
+};
+
+/**
+ * Makes a generic GET request to the API to retrieve, insert, or update
+ * data and dispatches actions to redux to update application state based on the response.
+ * @param path
+ * @param requestType
+ * @param successType
+ * @param failureType
+ * @param dispatch
+ * @param getState
+ * @param debug
+ * @returns {Promise<unknown>}
+ */
+export const get = async (path, requestType, successType, failureType, dispatch, getState, debug = false) => {
+    //If we don't need redux for the action we can just skip the dispatch by setting the actions to null
+    let doDispatch = true;
+    if (isNil(requestType) || isNil(successType) || isNil(failureType)) doDispatch = false;
+
+    doDispatch &&
+    dispatch({
+        type: requestType,
+        payload: {}
+    });
+
+    try {
+        const params = {
+            method: 'GET',
+            headers: {
+                Authorization: 'foo',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'x-api-key': 'api-key',
+            },
+        };
+
+        const response = await fetch(getRequestUrl(path), params);
+        const body = await (response).json();
+        debug && console.log('[DEBUG] GET Response: ', body);
+
+        return new Promise((resolve, reject) => {
+            if (response.status >= 200 && response.status <= 210) {
+                doDispatch &&
+                dispatch({
+                    type: successType,
+                    payload: body,
+                });
+
+                resolve(response);
+            } else if (response.status > 210 || typeof response.status === 'undefined') {
+                // An error occurred
+                doDispatch &&
+                dispatch({
+                    type: failureType,
+                    payload: { message: `There was an error retrieving data from the API: ${JSON.stringify(body)}`}
+                });
+
+                reject(response);
+            }
+        });
+    } catch(err) {
+        console.log('[ERROR] Error receiving response from API', err);
+        doDispatch &&
+        dispatch({
+            type: failureType,
+            payload: { message: err.message }
+        });
+    }
 };
 
 /**
