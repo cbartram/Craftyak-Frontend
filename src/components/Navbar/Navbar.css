@@ -9,3 +9,7 @@
     left: 0 !important;
     width: 100% !important;
 }
+
+.ui.menu .item:before {
+    width: 0 !important;
+}

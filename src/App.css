@@ -1,22 +1,11 @@
-.App {
-  text-align: center;
+.ui.left.visible.sidebar {
+    box-shadow: none;
 }
 
-.App-logo {
-  height: 40vmin;
-}
+.ui.accordion .accordion .title .dropdown.icon:before, .ui.accordion .title .dropdown.icon:before {
+     content: '\f0da';
+ }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+.ui.vertical.menu.accordion-menu {
+  width: 100%;
 }
