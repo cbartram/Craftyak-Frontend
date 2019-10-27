@@ -45,6 +45,7 @@ class Navbar extends Component {
             <Menu stackable className="menu-navbar">
                 <Menu.Item className="menu-logo">
                     <img alt="logo" src={Logo}/>
+                    <span className="cursive-logo ml-2">Crafty Yak</span>
                 </Menu.Item>
                 <Menu.Menu position="right">
                     <Menu.Item>

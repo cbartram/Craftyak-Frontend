@@ -49,10 +49,11 @@ class App extends Component {
      */
     componentDidMount() {
         // SCROLL_TOP_OFFSET is the height when the sub navbar becomes sticky
-        const SCROLL_TOP_OFFSET = 394;
+        const SCROLL_TOP_OFFSET = 426;
         this.props.getProducts();
         window.onscroll = () => {
             const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            console.log(scrollTop);
             if(scrollTop >= SCROLL_TOP_OFFSET) {
                 this.setState({ sticky: true });
             } else if(scrollTop < SCROLL_TOP_OFFSET) {
@@ -138,14 +139,15 @@ class App extends Component {
             <div>
                 <div className="row">
                     <div className="col-12">
-                        <div className="jumbotron jumbotron-fluid px-3">
-                            <h1 className="display-4">Welcome to Crafty Yak</h1>
-                            <p className="lead">Explore our wide range of mug, t-shirt, sticker, and cup based products.</p>
-                            <hr className="my-4" />
-                                <p>It uses utility classes for typography and spacing to space content out within the larger
-                                    container.</p>
-                                <a className="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-                        </div>
+                            <div className="box">
+                                <img alt="" role="presentation"
+                                     src="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75"
+                                     srcSet="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75 1131w,https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w2262-h686,r:w2262-h686-sfit,e:fjpg-c75 2262w,https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w3393-h1029,r:w3393-h1029-sfit,e:fjpg-c75 3393w"
+                                     style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left center'}} />
+                                    <div className="text">
+                                        <h1 className="gray-title">Crafty Yak</h1>
+                                    </div>
+                            </div>
                     </div>
                 </div>
                 <div className="row">
@@ -159,8 +161,12 @@ class App extends Component {
                                             <img alt="logo" src={Logo}/>
                                         </Menu.Item>
                                     }
+                                    <Menu.Item>
+                                        <Icon name="list" />
+                                        <span className="text-muted">Filter</span>
+                                    </Menu.Item>
                                     <Menu.Item position="right">
-                                        Sort By: &nbsp;
+                                        <span className="text-muted">Sort By:</span> &nbsp;
                                         <div className="dropdown">
                                             <a className="dropdown-toggle" href="#null" id="dropdownMenuButton" data-toggle="dropdown">
                                                 { this.props.products.sort.formattedText }

@@ -43,3 +43,9 @@
     border-radius: 50%;
 }
 
+.cursive-logo {
+    font-family: 'Pacifico', cursive;
+    color: #7875eb;
+    font-size: 20px;
+}
+

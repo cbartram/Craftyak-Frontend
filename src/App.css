@@ -12,6 +12,28 @@
 
 .ui.secondary.pointing.menu {
     background: white;
-    border-bottom: 1px solid rgb(231, 231, 231);
-    padding-left: 30px !important;
+    border-bottom: 1px solid rgb(231, 231, 231) !important;
+}
+
+.gray-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 55px;
+    color: #484848;
+}
+
+.box {
+    position: relative;
+    display: inline-block; /* Make the width of box same as image */
+    min-height: 300px;
+    min-width: 1128px;
+}
+.box .text {
+    position: absolute;
+    z-index: 999;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 30%; /* Adjust this value to move the positioned div up and down */
+    text-align: center;
+    width: 60%; /* Set the width of the positioned div */
 }

@@ -82,15 +82,11 @@ export default class Sidebar extends Component {
           <div className="col-md-2 d-none d-md-block sidebar pl-0">
             <div className="sidebar-sticky">
               <div className="nav flex-column" style={this.props.sticky ? { position: 'fixed', top: '85px'  } : { position: 'relative'} }>
-                <div className="d-flex flex-row justify-content-start ml-4 px-2">
-                  <Icon name="list" />
-                  <p>Filter</p>
-                </div>
                 <div className="accordion" id="accordionExample">
                   <div className="ml-2 px-4">
                     <div id="headingOne">
                       <p className="mb-0">
-                        <a href="#product-type" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <a href="#product-type" className="sidebar-product-type" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                           Product Type
                         </a>
                       </p>
