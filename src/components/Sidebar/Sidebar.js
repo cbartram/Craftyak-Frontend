@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Slider } from "react-semantic-ui-range";
-import {Form, Icon} from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import './Sidebar.css';
 
 export default class Sidebar extends Component {
