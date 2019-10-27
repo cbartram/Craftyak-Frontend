@@ -1,15 +1,29 @@
 .ui.menu-navbar {
-    box-shadow: 0 27px 29px 0 rgba(0,0,0,.05) !important;
+    /*box-shadow: 0 27px 29px 0 rgba(0,0,0,.05) !important;*/
     background-color: #fff !important;
     border-radius: 0 !important;
-    margin-bottom: 2rem !important;
+    margin-bottom: 0 !important;
     z-index: 10 !important;
-    position: fixed !important;
+    position: relative !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
+    border: 0 !important;
 }
 
 .ui.menu .item:before {
     width: 0 !important;
 }
+
+.ui.menu:not(.vertical) .item > .button {
+    padding-top:0 !important;
+}
+
+.ui.menu .ui.dropdown .menu>.item .icon:not(.dropdown) {
+    margin: 0!important;
+}
+
+.ui.button.hidden, .ui.button.hidden:hover, .ui.button.hidden:focus {
+    background: transparent;
+}
+

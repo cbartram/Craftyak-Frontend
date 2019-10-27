@@ -1,11 +1,17 @@
-.ui.left.visible.sidebar {
-    box-shadow: none;
+.sidebar-sticky {
+    position: sticky;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.ui.accordion .accordion .title .dropdown.icon:before, .ui.accordion .title .dropdown.icon:before {
-     content: '\f0da';
- }
+.ui.secondary.pointing.menu:last-child {
+    padding-right: 30px !important;
+}
 
-.ui.vertical.menu.accordion-menu {
-  width: 100%;
+.ui.secondary.pointing.menu {
+    background: white;
+    border-bottom: 1px solid rgb(231, 231, 231);
+    padding-left: 30px !important;
 }
