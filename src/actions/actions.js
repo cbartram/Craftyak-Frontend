@@ -6,6 +6,7 @@ import { get } from '../util';
 import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
 import {UPDATE_SORT_OPTIONS} from "../constants";
+import {FILTER_PRODUCTS} from "../constants";
 
 /**
  * Sends a user's current video information (such as duration completed, started watching etc.) to
@@ -35,6 +36,18 @@ export const addToCart = (item) => ({
 export const removeFromCart = (item) => ({
    type: REMOVE_FROM_CART,
    payload: item
+});
+
+
+/**
+ * Filters the list of products given a boolean checklist
+ * of viable products to include
+ * @param payload Object { mug: false, cup: true, sticker: false ... }
+ * @returns {{payload: *, type: *}}
+ */
+export const filterProducts = (payload) => ({
+   type: FILTER_PRODUCTS,
+   payload,
 });
 
 

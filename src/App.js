@@ -17,7 +17,7 @@ import {
 } from 'semantic-ui-react'
 import './App.css';
 import Sidebar from "./components/Sidebar/Sidebar";
-import {addToCart, getProducts, removeFromCart, updateSortOptions} from "./actions/actions";
+import {addToCart, filterProducts, getProducts, removeFromCart, updateSortOptions} from "./actions/actions";
 import Logo from "./resources/images/Crafty_Yak_Logo.png";
 
 const mapStateToProps = (state) => ({
@@ -29,19 +29,9 @@ const mapDispatchToProps = (dispatch) => ({
     getProducts: (payload) => dispatch(getProducts(payload)),
     addToCart: (payload) => dispatch(addToCart(payload)),
     removeFromCart: (payload) => dispatch(removeFromCart(payload)),
-    updateSortOptions: (payload) => dispatch(updateSortOptions(payload))
+    updateSortOptions: (payload) => dispatch(updateSortOptions(payload)),
+    filterProducts: (payload) => dispatch(filterProducts(payload)),
 });
-
-const ColorForm = (
-    <Form>
-        <Form.Group grouped>
-            <Form.Checkbox label='Red' name='color' value='red' />
-            <Form.Checkbox label='Orange' name='color' value='orange' />
-            <Form.Checkbox label='Green' name='color' value='green' />
-            <Form.Checkbox label='Blue' name='color' value='blue' />
-        </Form.Group>
-    </Form>
-);
 
 class App extends Component {
     constructor(props) {
@@ -142,15 +132,15 @@ class App extends Component {
     handleSortClick(data) {
         this.props.updateSortOptions(data);
     }
+
     render() {
         return (
             <div>
                 <div className="row">
                     <div className="col-12">
                         <div className="jumbotron jumbotron-fluid px-3">
-                            <h1 className="display-4">Hello, world!</h1>
-                            <p className="lead">This is a simple hero unit, a simple jumbotron-style component for calling
-                                extra attention to featured content or information.</p>
+                            <h1 className="display-4">Welcome to Crafty Yak</h1>
+                            <p className="lead">Explore our wide range of mug, t-shirt, sticker, and cup based products.</p>
                             <hr className="my-4" />
                                 <p>It uses utility classes for typography and spacing to space content out within the larger
                                     container.</p>
@@ -175,7 +165,7 @@ class App extends Component {
                                             <a className="dropdown-toggle" href="#null" id="dropdownMenuButton" data-toggle="dropdown">
                                                 { this.props.products.sort.formattedText }
                                             </a>
-                                            <div className="dropdown-menu">
+                                            <div className="dropdown-menu dropdown-menu-right">
                                                 <a className="dropdown-item" onClick={() => this.handleSortClick("PRODUCT_TYPE")} href="#product_type">Product Type</a>
                                                 <a className="dropdown-item" onClick={() => this.handleSortClick("NEWEST")} href="#newest">Newest</a>
                                                 <a className="dropdown-item" onClick={() => this.handleSortClick("PRICE_HL")} href="#price_hl">Price: High to Low</a>
@@ -189,7 +179,11 @@ class App extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <Sidebar sticky={this.state.sticky} />
+                    <Sidebar
+                        sticky={this.state.sticky}
+                        products={this.props.products}
+                        onFilter={(checkbox) => this.props.filterProducts(checkbox)}
+                    />
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4" ref={this.stickyRef}>
                         <div className="row" >
                         { this.renderCards() }
