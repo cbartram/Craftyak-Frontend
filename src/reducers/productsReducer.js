@@ -63,7 +63,10 @@ export default (state = { ...DEFAULT_STATE }, action) => {
 const getSortComparator = (value) => {
     switch(value) {
         case 'PRODUCT_TYPE':
-            return (a, b) => a.category - b.category;
+            return (a, b) => b.category.mug - a.category.mug ||
+                b.category.shirt - a.category.shirt||
+                b.category.cup - a.category.cup ||
+                b.category.sticker - a.category.sticker;
         case 'NEWEST':
             return (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
         case 'PRICE_HL':
