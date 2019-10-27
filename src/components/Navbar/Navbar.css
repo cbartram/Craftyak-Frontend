@@ -26,4 +26,20 @@
 .ui.button.hidden, .ui.button.hidden:hover, .ui.button.hidden:focus {
     background: transparent;
 }
+.ui.menu .dropdown.item:hover, .ui.menu .dropdown.item:focus  {
+    background: transparent !important;
+}
+.cart.icon:hover {
+    cursor: pointer;
+    background: white;
+    color: #7875eb;
+}
+.cart-dropdown:hover {
+    background: white;
+}
+
+.badge.badge-primary {
+    background: #7875eb;
+    border-radius: 50%;
+}
 

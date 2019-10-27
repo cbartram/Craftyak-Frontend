@@ -5,6 +5,7 @@ import * as constants from '../constants';
 import { get } from '../util';
 import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
+import {UPDATE_SORT_OPTIONS} from "../constants";
 
 /**
  * Sends a user's current video information (such as duration completed, started watching etc.) to
@@ -34,4 +35,16 @@ export const addToCart = (item) => ({
 export const removeFromCart = (item) => ({
    type: REMOVE_FROM_CART,
    payload: item
+});
+
+
+/**
+ * Handles updating the sort of the page when users
+ * change the sort dropdown from the navbar
+ * @param payload
+ * @returns {{payload: *, type: *}}
+ */
+export const updateSortOptions = (payload) => ({
+    type: UPDATE_SORT_OPTIONS,
+    payload
 });

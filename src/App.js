@@ -17,20 +17,19 @@ import {
 } from 'semantic-ui-react'
 import './App.css';
 import Sidebar from "./components/Sidebar/Sidebar";
-import {addToCart, getProducts, removeFromCart} from "./actions/actions";
+import {addToCart, getProducts, removeFromCart, updateSortOptions} from "./actions/actions";
 import Logo from "./resources/images/Crafty_Yak_Logo.png";
 
-const mapStateToProps = (state) => {
-    return {
-        products: state.products,
-        cart: state.cart
-    }
-};
+const mapStateToProps = (state) => ({
+    products: state.products,
+    cart: state.cart,
+});
 
 const mapDispatchToProps = (dispatch) => ({
     getProducts: (payload) => dispatch(getProducts(payload)),
     addToCart: (payload) => dispatch(addToCart(payload)),
-    removeFromCart: (payload) => dispatch(removeFromCart(payload))
+    removeFromCart: (payload) => dispatch(removeFromCart(payload)),
+    updateSortOptions: (payload) => dispatch(updateSortOptions(payload))
 });
 
 const ColorForm = (
@@ -55,24 +54,15 @@ class App extends Component {
     }
 
     /**
-     * Handles the click event for switching the actively shown dropdown
-     * in the accordion
-     **/
-    handleClick = (e, { index }) => {
-        const { activeIndex } = this.state;
-        this.setState({ activeIndex: activeIndex === index ? -1 : index })
-    };
-
-    /**
      * Fetches products to show to users from
      * the REST API endpoints
      */
     componentDidMount() {
+        // SCROLL_TOP_OFFSET is the height when the sub navbar becomes sticky
         const SCROLL_TOP_OFFSET = 394;
         this.props.getProducts();
         window.onscroll = () => {
             const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-            // 70px is the height when the sub navbar becomes sticky
             if(scrollTop >= SCROLL_TOP_OFFSET) {
                 this.setState({ sticky: true });
             } else if(scrollTop < SCROLL_TOP_OFFSET) {
@@ -144,6 +134,14 @@ class App extends Component {
         ));
     }
 
+    /**
+     * Handles dispatching an action when a new
+     * dropdown sort selection is made
+     * @param data String enum representing the level or sorting for products
+     */
+    handleSortClick(data) {
+        this.props.updateSortOptions(data);
+    }
     render() {
         return (
             <div>
@@ -173,14 +171,17 @@ class App extends Component {
                                     }
                                     <Menu.Item position="right">
                                         Sort By: &nbsp;
-                                        <Dropdown text={this.state}>
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item text='New' />
-                                                <Dropdown.Item text='Product Type' description='ctrl + o' />
-                                                <Dropdown.Item text='Category' description='ctrl + o' />
-                                                <Dropdown.Item text='Price' description='ctrl + o' />
-                                            </Dropdown.Menu>
-                                        </Dropdown>
+                                        <div className="dropdown">
+                                            <a className="dropdown-toggle" href="#null" id="dropdownMenuButton" data-toggle="dropdown">
+                                                { this.props.products.sort.formattedText }
+                                            </a>
+                                            <div className="dropdown-menu">
+                                                <a className="dropdown-item" onClick={() => this.handleSortClick("PRODUCT_TYPE")} href="#product_type">Product Type</a>
+                                                <a className="dropdown-item" onClick={() => this.handleSortClick("NEWEST")} href="#newest">Newest</a>
+                                                <a className="dropdown-item" onClick={() => this.handleSortClick("PRICE_HL")} href="#price_hl">Price: High to Low</a>
+                                                <a className="dropdown-item" onClick={() => this.handleSortClick("PRICE_LH")} href="#price_lh">Price: Low to High</a>
+                                            </div>
+                                        </div>
                                     </Menu.Item>
                                 </Menu>
                             </Responsive>
