@@ -10,11 +10,12 @@ import {ApolloClient} from 'apollo-client'
 import {ApolloProvider} from "react-apollo";
 import rootReducer from './reducers/rootReducer';
 import Router from './components/Router/Router'
-import { dispatchProcessMiddleware } from './util';
-import { DEV_URL, IS_PROD, PROD_URL, INITIAL_STATE } from './constants'
+import { dispatchProcessMiddleware, dispatchProcess } from './util';
+import {DEV_URL, IS_PROD, PROD_URL, INITIAL_STATE, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE} from './constants'
 import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
+import {getProducts} from "./actions/actions";
 
 // Setup Redux middleware and store
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -39,16 +40,30 @@ const client = new ApolloClient({
     cache: new Apollo.InMemoryCache()
 });
 
-ReactDOM.render(
-    <ApolloProvider client={client}>
-        <Provider store={store}>
-            <StripeProvider apiKey="pk_test_AIs6RYV3qrxG6baDpohxn1L7">
-                <Elements>
-                    <Router/>
-                </Elements>
-            </StripeProvider>
-        </Provider>
-    </ApolloProvider>, document.getElementById('root'));
+/**
+ * Renders the App to the DOM
+ * @returns {Promise<void>}
+ */
+const render = async () => {
+    try {
+        await dispatchProcess(getProducts(), GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE);
+        ReactDOM.render(
+            <ApolloProvider client={client}>
+                <Provider store={store}>
+                    <StripeProvider apiKey="pk_test_AIs6RYV3qrxG6baDpohxn1L7">
+                        <Elements>
+                            <Router/>
+                        </Elements>
+                    </StripeProvider>
+                </Provider>
+            </ApolloProvider>, document.getElementById('root'));
+    } catch(error) {
+        console.log("[Error] There was an issue loading the App: ", error);
+        // TODO Render the error page
+    }
+};
+
+render().then(() => console.log('App Loaded'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

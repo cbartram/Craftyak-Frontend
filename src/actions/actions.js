@@ -14,7 +14,7 @@ import {FILTER_PRODUCTS} from "../constants";
  * @returns {Function}
  */
 export const getProducts = () => async (dispatch, getState) => {
-    await get(constants.GET_ALL_PRODUCTS_ENDPOINT, constants.GET_PRODUCTS_REQUEST, constants.GET_PRODUCTS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState, true);
+    await get(constants.GET_ALL_PRODUCTS_ENDPOINT, constants.GET_PRODUCTS_REQUEST, constants.GET_PRODUCTS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState, false);
 };
 
 /**

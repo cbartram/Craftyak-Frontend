@@ -13,7 +13,16 @@
 .ui.secondary.pointing.menu {
     background: white;
     border-bottom: 1px solid rgb(231, 231, 231) !important;
+    height: 57px !important; /* Set bc the logo makes the secondary navbar "jump" to its height bc its the largest element */
 }
+
+.search-highlight {
+    background-color: rgb(229, 236, 253);
+    color: #865fff;
+    border-radius: 7px;
+    padding: 5px 2px;
+}
+
 
 .gray-title {
     font-family: 'Pacifico', cursive;
@@ -27,6 +36,7 @@
     min-height: 300px;
     min-width: 1128px;
 }
+
 .box .text {
     position: absolute;
     z-index: 999;

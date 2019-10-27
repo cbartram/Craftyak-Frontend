@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import debounce from 'lodash/debounce';
 import {
     Menu,
-    Input,
     Button,
     Dropdown,
     List,
     Image,
-    Icon
+    Icon,
+    Search
 } from 'semantic-ui-react'
 import Logo from '../../resources/images/Crafty_Yak_Logo.png';
-import './Navbar.css';
 import {removeFromCart} from "../../actions/actions";
+import { matchSearchQuery } from "../../util";
+import './Navbar.css';
 
 const mapStateToProps = (state) => ({
+    products: state.products,
     cart: state.cart,
 });
 
@@ -27,17 +30,65 @@ const mapDispatchToProps = (dispatch) => ({
  * @constructor
  */
 class Navbar extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            results: [], // Holds the results of the search
+            data: [], // Holds the full list of data being searched
+            value: '',
+            isLoading: false,
+        };
+
+        this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.handleResultSelect = this.handleResultSelect.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({ data: this.props.products.items });
+    }
 
     renderCartItems() {
         if(this.props.cart.items.length === 0)
-            return <Icon name="cart" />;
+            return <Icon name="cart" className="gray-title" />;
         else
             return <div>
-                        <Icon name="cart" />
+                        <Icon name="cart" className="gray-title" />
                         <span className="badge badge-primary">
                             {this.props.cart.items.length}
                         </span>
                     </div>
+    }
+
+    /**
+     * Renders a single row in the search dropdown
+     */
+    renderSearchRow(item) {
+        return (
+            <div className="d-flex align-items-center px-3 py-2 search-row-item">
+                <Image avatar src={item.heroImage} />
+                <div className="d-flex flex-column">
+                    {matchSearchQuery(this.state.value, item.name)}
+                    <small className="text-muted">${item.price}</small>
+                </div>
+            </div>
+        )
+    }
+
+    handleResultSelect(e, { result }) {
+        console.log(result);
+        // TODO This needs to be implemented somehow
+    }
+
+    /**
+     * Handles performing a simple search for videos or quizzes
+     * @param e Event object
+     * @param value String search query
+     */
+    handleSearchChange(e, { value }) {
+        let { data } = this.state;
+        data = data.filter(product => product.name.toUpperCase().includes(value.toUpperCase()));
+        this.setState({results: data, value})
     }
 
     render() {
@@ -49,7 +100,16 @@ class Navbar extends Component {
                 </Menu.Item>
                 <Menu.Menu position="right">
                     <Menu.Item>
-                        <Input icon="search" placeholder="Search"/>
+                       <Search
+                           className="global-search"
+                           placeholder="Search"
+                           loading={this.state.isLoading}
+                           onResultSelect={(e, f) => this.handleResultSelect(e, f)}
+                           onSearchChange={debounce(this.handleSearchChange, 300, { leading: true })}
+                           results={this.state.results}
+                           value={this.state.value}
+                           resultRenderer={(item) => this.renderSearchRow(item)}
+                       />
                     </Menu.Item>
                     <Menu.Item>
                         <Dropdown

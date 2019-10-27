@@ -8,12 +8,10 @@ import {
     Card,
     Image,
     Button,
-    Form,
     Placeholder,
     Sticky,
     Responsive,
     Menu,
-    Dropdown
 } from 'semantic-ui-react'
 import './App.css';
 import Sidebar from "./components/Sidebar/Sidebar";
@@ -50,10 +48,8 @@ class App extends Component {
     componentDidMount() {
         // SCROLL_TOP_OFFSET is the height when the sub navbar becomes sticky
         const SCROLL_TOP_OFFSET = 426;
-        this.props.getProducts();
         window.onscroll = () => {
             const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-            console.log(scrollTop);
             if(scrollTop >= SCROLL_TOP_OFFSET) {
                 this.setState({ sticky: true });
             } else if(scrollTop < SCROLL_TOP_OFFSET) {
@@ -69,7 +65,7 @@ class App extends Component {
      */
     renderCards(loading = this.props.products.isFetching) {
         return map(this.props.products.items || [{}, {}, {}, {}, {}], product => (
-                <Card key={product.id} className="col-md-4 col-lg-4 col-sm-12 d-flex align-items-stretch m-4">
+            <Card key={product.id} className="col-md-4 col-lg-4 col-sm-12 d-flex align-items-stretch m-4">
                 {
                     loading ?
                         <Placeholder>
@@ -134,20 +130,37 @@ class App extends Component {
         this.props.updateSortOptions(data);
     }
 
+    /**
+     * Renders a set of items in the cart with a purple
+     * badge representing the number of items.
+     * @returns {*}
+     */
+    renderCartItems() {
+        if(this.props.cart.items.length === 0)
+            return <Icon name="cart" className="gray-title" />;
+        else
+            return <div>
+                <Icon name="cart" className="gray-title" />
+                <span className="badge badge-primary">
+                    {this.props.cart.items.length}
+                </span>
+            </div>
+    }
+
     render() {
         return (
             <div>
                 <div className="row">
                     <div className="col-12">
-                            <div className="box">
-                                <img alt="" role="presentation"
-                                     src="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75"
-                                     srcSet="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75 1131w,https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w2262-h686,r:w2262-h686-sfit,e:fjpg-c75 2262w,https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w3393-h1029,r:w3393-h1029-sfit,e:fjpg-c75 3393w"
-                                     style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left center'}} />
-                                    <div className="text">
-                                        <h1 className="gray-title">Crafty Yak</h1>
-                                    </div>
+                        <div className="box">
+                            <img alt="" role="presentation"
+                                 src="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75"
+                                 srcSet="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75 1131w,https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w2262-h686,r:w2262-h686-sfit,e:fjpg-c75 2262w,https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w3393-h1029,r:w3393-h1029-sfit,e:fjpg-c75 3393w"
+                                 style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left center'}} />
+                            <div className="text">
+                                <h1 className="gray-title">Crafty Yak</h1>
                             </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
@@ -162,10 +175,16 @@ class App extends Component {
                                         </Menu.Item>
                                     }
                                     <Menu.Item>
-                                        <Icon name="list" />
+                                        <Icon name="list" style={{ color: '#6c757d'}} />
                                         <span className="text-muted">Filter</span>
                                     </Menu.Item>
                                     <Menu.Item position="right">
+                                        {
+                                            this.state.sticky &&
+                                            this.renderCartItems()
+                                        }
+                                    </Menu.Item>
+                                    <Menu.Item>
                                         <span className="text-muted">Sort By:</span> &nbsp;
                                         <div className="dropdown">
                                             <a className="dropdown-toggle" href="#null" id="dropdownMenuButton" data-toggle="dropdown">
@@ -192,7 +211,7 @@ class App extends Component {
                     />
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4" ref={this.stickyRef}>
                         <div className="row" >
-                        { this.renderCards() }
+                            { this.renderCards() }
                         </div>
                     </main>
                 </div>
