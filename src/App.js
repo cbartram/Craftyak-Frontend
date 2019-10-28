@@ -47,9 +47,10 @@ class App extends Component {
      */
     componentDidMount() {
         // SCROLL_TOP_OFFSET is the height when the sub navbar becomes sticky
-        const SCROLL_TOP_OFFSET = 426;
+        const SCROLL_TOP_OFFSET = 503;
         window.onscroll = () => {
             const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            // console.log(scrollTop);
             if(scrollTop >= SCROLL_TOP_OFFSET) {
                 this.setState({ sticky: true });
             } else if(scrollTop < SCROLL_TOP_OFFSET) {
@@ -65,7 +66,7 @@ class App extends Component {
      */
     renderCards(loading = this.props.products.isFetching) {
         return map(this.props.products.items || [{}, {}, {}, {}, {}], product => (
-            <Card key={product.id} className="col-md-4 col-lg-4 col-sm-12 d-flex align-items-stretch m-4">
+            <Card key={product.id} className="col-md-3 col-lg-3 offset-md-2 col-sm-12 col-sm-offset-1 d-flex align-items-stretch m-2">
                 {
                     loading ?
                         <Placeholder>
@@ -209,7 +210,7 @@ class App extends Component {
                         products={this.props.products}
                         onFilter={(checkbox) => this.props.filterProducts(checkbox)}
                     />
-                    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4" ref={this.stickyRef}>
+                    <main role="main" className="col-md-10 ml-sm-auto col-lg-10 px-4" ref={this.stickyRef}>
                         <div className="row" >
                             { this.renderCards() }
                         </div>
