@@ -33,10 +33,24 @@ export default (state = { items: [] }, action) => {
                 items: [...updatedQuantity]
             };
         case REMOVE_FROM_CART:
-            const filteredItems = state.items.filter(item => item.uuid !== action.payload);
+            const data = state.items.map(item => {
+                // This is not the item you are looking for (yes this was a reference to star wars)
+                if(item.uuid !== action.payload) {
+                    return item;
+                } else {
+                    // Try to subtract 1 from the quantity
+                    if(item.quantity > 1) {
+                        return { ...item, quantity: item.quantity - 1 }
+                    } else {
+                        // The quantity of the item is only 1 just remove it
+                        return null;
+                    }
+                }
+            }).filter(Boolean);
+
             return {
                 ...state,
-                items: [...filteredItems]
+                items: [...data]
             };
         default:
             return {
