@@ -17,6 +17,7 @@ import './App.css';
 import Sidebar from "./components/Sidebar/Sidebar";
 import {addToCart, filterProducts, getProducts, removeFromCart, updateSortOptions} from "./actions/actions";
 import Logo from "./resources/images/Crafty_Yak_Logo.png";
+import PaymentModal from "./components/PaymentModal/PaymentModal";
 
 const mapStateToProps = (state) => ({
     products: state.products,
@@ -24,7 +25,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getProducts: (payload) => dispatch(getProducts(payload)),
     addToCart: (payload) => dispatch(addToCart(payload)),
     removeFromCart: (payload) => dispatch(removeFromCart(payload)),
     updateSortOptions: (payload) => dispatch(updateSortOptions(payload)),
@@ -37,7 +37,8 @@ class App extends Component {
 
         this.stickyRef = React.createRef();
         this.state = {
-            sticky: false
+            sticky: false,
+            open: false
         };
     }
 

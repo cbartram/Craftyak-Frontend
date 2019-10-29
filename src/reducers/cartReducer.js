@@ -2,6 +2,7 @@ import {
     ADD_TO_CART,
     REMOVE_FROM_CART
 } from '../constants';
+import groupBy from 'lodash/groupBy';
 
 
 /**
@@ -13,6 +14,8 @@ import {
 export default (state = { items: [] }, action) => {
     switch (action.type) {
         case ADD_TO_CART:
+            const items = groupBy(state.items, 'name');
+            console.log(items);
             return {
                 ...state,
                 items: [...state.items, action.payload]

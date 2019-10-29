@@ -14,6 +14,7 @@ import Logo from '../../resources/images/Crafty_Yak_Logo.png';
 import {removeFromCart} from "../../actions/actions";
 import { matchSearchQuery } from "../../util";
 import './Navbar.css';
+import PaymentModal from "../PaymentModal/PaymentModal";
 
 const mapStateToProps = (state) => ({
     products: state.products,
@@ -38,6 +39,7 @@ class Navbar extends Component {
             data: [], // Holds the full list of data being searched
             value: '',
             isLoading: false,
+            open: false, // True if the payment modal is open
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -53,11 +55,11 @@ class Navbar extends Component {
             return <Icon name="cart" className="gray-title" />;
         else
             return <div>
-                        <Icon name="cart" className="gray-title" />
-                        <span className="badge badge-primary">
+                <Icon name="cart" className="gray-title" />
+                <span className="badge badge-primary">
                             {this.props.cart.items.length}
                         </span>
-                    </div>
+            </div>
     }
 
     /**
@@ -93,73 +95,76 @@ class Navbar extends Component {
 
     render() {
         return (
-            <Menu stackable className="menu-navbar">
-                <Menu.Item className="menu-logo">
-                    <img alt="logo" src={Logo}/>
-                    <span className="cursive-logo ml-2">Crafty Yak</span>
-                </Menu.Item>
-                <Menu.Menu position="right">
-                    <Menu.Item>
-                       <Search
-                           className="global-search"
-                           placeholder="Search"
-                           loading={this.state.isLoading}
-                           onResultSelect={(e, f) => this.handleResultSelect(e, f)}
-                           onSearchChange={debounce(this.handleSearchChange, 300, { leading: true })}
-                           results={this.state.results}
-                           value={this.state.value}
-                           resultRenderer={(item) => this.renderSearchRow(item)}
-                       />
+            <div>
+                {/*<PaymentModal open={this.state.open} />*/}
+                <Menu stackable className="menu-navbar">
+                    <Menu.Item className="menu-logo">
+                        <img alt="logo" src={Logo}/>
+                        <span className="cursive-logo ml-2">Crafty Yak</span>
                     </Menu.Item>
-                    <Menu.Item>
-                        <Dropdown
-                            item
-                            icon={this.renderCartItems()}
-                            closeOnChange={false}
-                            closeOnBlur
-                            className="cart-dropdown"
-                        >
-                            <Dropdown.Menu>
-                                <Dropdown.Header content="You're Cart" />
-                                {
-                                    this.props.cart.items.length === 0 ?
-                                        <Dropdown.Item>
-                                            No items in the cart!
-                                        </Dropdown.Item> :
-                                        this.props.cart.items.map(product => {
-                                            return (
-                                                <Dropdown.Item key={product.uuid}>
-                                                    <List relaxed>
-                                                        <List.Item>
-                                                            <Image avatar src={product.heroImage} />
-                                                            <List.Content>
-                                                                <List.Header as='h4'>
-                                                                    {product.name}
-                                                                    &nbsp;
-                                                                    <Button className="hidden" size="mini" icon onClick={() => this.props.removeFromCart(product.uuid)}>
-                                                                        <Icon name="x" />
-                                                                    </Button>
-                                                                </List.Header>
-                                                                <List.Description>
-                                                                    ${product.price}
-                                                                </List.Description>
-                                                            </List.Content>
-                                                        </List.Item>
-                                                    </List>
-                                                </Dropdown.Item>
-                                            )
-                                        })
-                                }
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Button primary className="pill">
-                            Checkout
-                        </Button>
-                    </Menu.Item>
-                </Menu.Menu>
-            </Menu>
+                    <Menu.Menu position="right">
+                        <Menu.Item>
+                            <Search
+                                className="global-search"
+                                placeholder="Search"
+                                loading={this.state.isLoading}
+                                onResultSelect={(e, f) => this.handleResultSelect(e, f)}
+                                onSearchChange={debounce(this.handleSearchChange, 300, { leading: true })}
+                                results={this.state.results}
+                                value={this.state.value}
+                                resultRenderer={(item) => this.renderSearchRow(item)}
+                            />
+                        </Menu.Item>
+                        <Menu.Item>
+                            <Dropdown
+                                item
+                                icon={this.renderCartItems()}
+                                closeOnChange={false}
+                                closeOnBlur
+                                className="cart-dropdown"
+                            >
+                                <Dropdown.Menu>
+                                    <Dropdown.Header content="You're Cart" />
+                                    {
+                                        this.props.cart.items.length === 0 ?
+                                            <Dropdown.Item>
+                                                No items in the cart!
+                                            </Dropdown.Item> :
+                                            this.props.cart.items.map(product => {
+                                                return (
+                                                    <Dropdown.Item key={product.uuid}>
+                                                        <List relaxed>
+                                                            <List.Item>
+                                                                <Image avatar src={product.heroImage} />
+                                                                <List.Content>
+                                                                    <List.Header as='h4'>
+                                                                        {product.name}
+                                                                        &nbsp;
+                                                                        <Button className="hidden" size="mini" icon onClick={() => this.props.removeFromCart(product.uuid)}>
+                                                                            <Icon name="x" />
+                                                                        </Button>
+                                                                    </List.Header>
+                                                                    <List.Description>
+                                                                        ${product.price}
+                                                                    </List.Description>
+                                                                </List.Content>
+                                                            </List.Item>
+                                                        </List>
+                                                    </Dropdown.Item>
+                                                )
+                                            })
+                                    }
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Menu.Item>
+                        <Menu.Item>
+                            <Button primary className="pill" onClick={() => this.setState({ open: true })}>
+                                Checkout
+                            </Button>
+                        </Menu.Item>
+                    </Menu.Menu>
+                </Menu>
+            </div>
         );
     }
 }

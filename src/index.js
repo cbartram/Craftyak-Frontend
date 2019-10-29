@@ -13,9 +13,9 @@ import Router from './components/Router/Router'
 import { dispatchProcessMiddleware, dispatchProcess } from './util';
 import {DEV_URL, IS_PROD, PROD_URL, INITIAL_STATE, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE} from './constants'
 import * as serviceWorker from './serviceWorker';
+import {getProducts} from "./actions/actions";
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
-import {getProducts} from "./actions/actions";
 
 // Setup Redux middleware and store
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

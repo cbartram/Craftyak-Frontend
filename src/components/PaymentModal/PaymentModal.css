@@ -1,0 +1,11 @@
+.ui.page.modals.transition.visible {
+    display: flex !important;
+}
+/*.modals.dimmer .ui.scrolling.modal {*/
+/*     margin-left: auto !important;*/
+/*    margin-right: auto !important;*/
+/* }*/
+
+.dimmed.dimmable > .ui.modals.dimmer.visible {
+    display: flex !important;
+}

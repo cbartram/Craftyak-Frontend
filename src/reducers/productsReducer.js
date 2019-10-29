@@ -31,7 +31,7 @@ export default (state = { ...DEFAULT_STATE }, action) => {
             return {
                 ...state,
                 isFetching: false,
-                items: action.payload,
+                items: [...action.payload.map(i => ({ ...i, quantity: 1 }))],
                 originalItems: action.payload, // Holds a full list of original set of items for filtering later
             };
         case GET_PRODUCTS_FAILURE:
