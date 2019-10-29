@@ -50,6 +50,12 @@ class Navbar extends Component {
         this.setState({ data: this.props.products.items });
     }
 
+
+    /**
+     * Renders a image price, name, and quantity for a set of
+     * products in the cart
+     * @returns {*}
+     */
     renderCartItems() {
         if(this.props.cart.items.length === 0)
             return <Icon name="cart" className="gray-title" />;
@@ -57,8 +63,8 @@ class Navbar extends Component {
             return <div>
                 <Icon name="cart" className="gray-title" />
                 <span className="badge badge-primary">
-                            {this.props.cart.items.length}
-                        </span>
+                    { this.props.cart.items.reduce((prev, curr) => ({ quantity: curr.quantity + prev.quantity })).quantity }
+                 </span>
             </div>
     }
 
@@ -145,7 +151,8 @@ class Navbar extends Component {
                                                                         </Button>
                                                                     </List.Header>
                                                                     <List.Description>
-                                                                        ${product.price}
+                                                                        ${product.price} &nbsp;
+                                                                        <span className="badge badge-primary">{product.quantity}</span>
                                                                     </List.Description>
                                                                 </List.Content>
                                                             </List.Item>
