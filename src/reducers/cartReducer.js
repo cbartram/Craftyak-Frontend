@@ -1,5 +1,5 @@
 import {
-    ADD_TO_CART,
+    ADD_TO_CART, CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS,
     REMOVE_FROM_CART
 } from '../constants';
 import groupBy from 'lodash/groupBy';
@@ -12,7 +12,7 @@ import _ from 'lodash';
  * @param action
  * @returns {{isFetching: boolean, error: null}|{}}
  */
-export default (state = { items: [] }, action) => {
+export default (state = { items: [], isFetching: false }, action) => {
     switch (action.type) {
         case ADD_TO_CART:
             // First group the cart items by their name i.e { itemOne: [{...}, {...}], itemTwo: [{...}] }
@@ -52,6 +52,26 @@ export default (state = { items: [] }, action) => {
                 ...state,
                 items: [...data]
             };
+        case CREATE_ORDER_REQUEST:
+            console.log("Creating order request...");
+            return {
+                ...state,
+                isFetching: true,
+            };
+        case CREATE_ORDER_SUCCESS: {
+            console.log("Success!", action.payload);
+            return {
+                ...state,
+            }
+        }    
+        case CREATE_ORDER_FAILURE: {
+            console.log("Failure: ", action.payload);
+            return {
+                ...state,
+                isFetching: false,
+                error: action.payload
+            }
+        }
         default:
             return {
                 ...state

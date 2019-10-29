@@ -83,3 +83,13 @@ a {
   color: white;
   background-color: #7875eb;
 }
+
+/* Modal dimmer color */
+.dimmed.dimmable > .ui.modals.dimmer.visible {
+  background: rgba(82, 95, 127, .7) !important;
+}
+
+/* Needed to position the modal in the center of the screen */
+.ui.modal {
+  position: relative !important;
+}

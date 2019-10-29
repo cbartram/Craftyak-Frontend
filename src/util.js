@@ -192,7 +192,7 @@ export const post = async (body, path, requestType, successType, failureType, di
         debug && console.log('[DEBUG] Post Response: ', response);
 
         return new Promise((resolve, reject) => {
-            if (response.statusCode === 200) {
+            if (response.status >= 200 && response.status <= 210) {
                 doDispatch &&
                 dispatch({
                     type: successType,
@@ -200,7 +200,7 @@ export const post = async (body, path, requestType, successType, failureType, di
                 });
 
                 resolve(response);
-            } else if (response.statusCode > 200 || typeof response.statusCode === 'undefined') {
+            } else if (response.statusCode > 210 || typeof response.statusCode === 'undefined') {
                 // An error occurred
                 doDispatch &&
                 dispatch({

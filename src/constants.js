@@ -32,6 +32,7 @@ export const IS_PROD = window.location.hostname !== 'localhost' || process.env.R
 
 //Endpoints
 export const GET_ALL_PRODUCTS_ENDPOINT = '/api/v1/products/';
+export const CREATE_ORDER_ENDPOINT = '/api/v1/orders/create'; // Checkout endpoint
 
 // Prod Params
 export const PROD_URL = 'https://2147bwmah5.execute-api.us-east-1.amazonaws.com/prod';
@@ -46,6 +47,9 @@ export const PROD_API_KEY = 'mNer7Typlc9npqrkThXZ08xAIWoBXLyG2NEfHDd2';
 export const GET_PRODUCTS_REQUEST = 'GET_PRODUCTS_REQUEST';
 export const GET_PRODUCTS_SUCCESS = 'GET_PRODUCTS_SUCCESS';
 export const GET_PRODUCTS_FAILURE = 'GET_PRODUCTS_FAILURE';
+export const CREATE_ORDER_REQUEST = 'CREATE_ORDER_REQUEST';
+export const CREATE_ORDER_SUCCESS = 'CREATE_ORDER_SUCCESS';
+export const CREATE_ORDER_FAILURE = 'CREATE_ORDER_FAILURE';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const UPDATE_SORT_OPTIONS = 'UPDATE_SORT_OPTIONS';

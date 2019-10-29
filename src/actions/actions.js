@@ -2,7 +2,7 @@
  * This file defines actions which trigger switch statements in the reducer
  */
 import * as constants from '../constants';
-import { get } from '../util';
+import { get, post } from '../util';
 import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
 import {UPDATE_SORT_OPTIONS} from "../constants";
@@ -15,6 +15,10 @@ import {FILTER_PRODUCTS} from "../constants";
  */
 export const getProducts = () => async (dispatch, getState) => {
     await get(constants.GET_ALL_PRODUCTS_ENDPOINT, constants.GET_PRODUCTS_REQUEST, constants.GET_PRODUCTS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState, false);
+};
+
+export const checkout = (payload) => async (dispatch, getState) => {
+    await post(payload, constants.CREATE_ORDER_ENDPOINT, constants.CREATE_ORDER_REQUEST, constants.CREATE_ORDER_SUCCESS, constants.CREATE_ORDER_FAILURE, dispatch, getState, false);
 };
 
 /**

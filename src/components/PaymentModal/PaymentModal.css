@@ -1,11 +1,12 @@
-.ui.page.modals.transition.visible {
-    display: flex !important;
-}
-/*.modals.dimmer .ui.scrolling.modal {*/
-/*     margin-left: auto !important;*/
-/*    margin-right: auto !important;*/
-/* }*/
 
-.dimmed.dimmable > .ui.modals.dimmer.visible {
-    display: flex !important;
+.ui.active.modal {
+    background: #f6f9fc;
+    font-size: 17px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 50px 100px -20px rgba(50, 50, 93, .25), 0 30px 60px -30px rgba(0, 0, 0, .3), 0 -18px 60px -10px rgba(0, 0, 0, .025);
+    box-shadow: 0 50px 100px -20px rgba(50, 50, 93, .25), 0 30px 60px -30px rgba(0, 0, 0, .3), 0 -18px 60px -10px rgba(0, 0, 0, .025);
+    overflow: hidden;
+    -webkit-transition: opacity .5s;
+    transition: opacity .5s;
+    will-change: opacity;
 }

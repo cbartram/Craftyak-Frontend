@@ -11,7 +11,7 @@ import {
     Search
 } from 'semantic-ui-react'
 import Logo from '../../resources/images/Crafty_Yak_Logo.png';
-import {removeFromCart} from "../../actions/actions";
+import { removeFromCart, checkout } from "../../actions/actions";
 import { matchSearchQuery } from "../../util";
 import './Navbar.css';
 import PaymentModal from "../PaymentModal/PaymentModal";
@@ -23,6 +23,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     removeFromCart: (payload) => dispatch(removeFromCart(payload)),
+    checkout: (payload) => dispatch(checkout(payload))
 });
 
 /**
@@ -102,7 +103,7 @@ class Navbar extends Component {
     render() {
         return (
             <div>
-                {/*<PaymentModal open={this.state.open} />*/}
+                <PaymentModal open={this.state.open} onClose={() => this.setState({ open: false })} />
                 <Menu stackable className="menu-navbar">
                     <Menu.Item className="menu-logo">
                         <img alt="logo" src={Logo}/>
@@ -165,7 +166,7 @@ class Navbar extends Component {
                             </Dropdown>
                         </Menu.Item>
                         <Menu.Item>
-                            <Button primary className="pill" onClick={() => this.setState({ open: true })}>
+                            <Button primary className="pill" onClick={() => this.props.checkout({ cart: this.props.cart, products: this.props.products.originalItems })}>
                                 Checkout
                             </Button>
                         </Menu.Item>
