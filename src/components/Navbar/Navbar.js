@@ -13,7 +13,7 @@ import {
 import Logo from '../../resources/images/Crafty_Yak_Logo.png';
 import { removeFromCart, checkout } from "../../actions/actions";
 import { matchSearchQuery } from "../../util";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './Navbar.css';
 
 const mapStateToProps = (state) => ({
@@ -23,7 +23,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     removeFromCart: (payload) => dispatch(removeFromCart(payload)),
-    checkout: (payload) => dispatch(checkout(payload))
 });
 
 /**
@@ -164,9 +163,12 @@ class Navbar extends Component {
                             </Dropdown>
                         </Menu.Item>
                         <Menu.Item>
-                            <Button as={Link} to="/checkout" primary className="pill">
-                                Checkout
-                            </Button>
+                            {
+                                this.props.history.location.pathname !== '/checkout' &&
+                                <Button as={Link} to="/checkout" primary className="pill">
+                                    Checkout
+                                </Button>
+                            }
                         </Menu.Item>
                     </Menu.Menu>
                 </Menu>
@@ -175,4 +177,4 @@ class Navbar extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));

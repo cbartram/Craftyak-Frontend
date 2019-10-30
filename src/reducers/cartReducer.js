@@ -1,6 +1,6 @@
 import {
-    ADD_TO_CART, CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS,
-    REMOVE_FROM_CART
+    ADD_TO_CART, CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, REMOVE_ALL_FROM_CART,
+    REMOVE_FROM_CART, UPDATE_QUANTITY
 } from '../constants';
 import groupBy from 'lodash/groupBy';
 
@@ -10,7 +10,7 @@ import groupBy from 'lodash/groupBy';
  * @param action
  * @returns {{isFetching: boolean, error: null}|{}}
  */
-export default (state = { items: [], isFetching: false }, action) => {
+export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 }, action) => {
     switch (action.type) {
         case ADD_TO_CART:
             // First group the cart items by their name i.e { itemOne: [{...}, {...}], itemTwo: [{...}] }
@@ -49,6 +49,22 @@ export default (state = { items: [], isFetching: false }, action) => {
             return {
                 ...state,
                 items: [...data]
+            };
+        case REMOVE_ALL_FROM_CART:
+            return {
+                ...state,
+                items: [...state.items.filter(product => product.uuid !== action.payload)]
+            };
+        case UPDATE_QUANTITY:
+            const updatedItems = state.items.map(item => {
+                if(item.uuid === action.payload.id) {
+                    return { ...item, quantity: action.payload.value}
+                }
+                return item;
+            });
+            return {
+                ...state,
+                items: [...updatedItems]
             };
         case CREATE_ORDER_REQUEST:
             console.log("Creating order request...");

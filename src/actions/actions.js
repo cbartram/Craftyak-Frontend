@@ -7,6 +7,8 @@ import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
 import {UPDATE_SORT_OPTIONS} from "../constants";
 import {FILTER_PRODUCTS} from "../constants";
+import {REMOVE_ALL_FROM_CART} from "../constants";
+import {UPDATE_QUANTITY} from "../constants";
 
 /**
  * Sends a user's current video information (such as duration completed, started watching etc.) to
@@ -47,6 +49,27 @@ export const removeFromCart = (item) => ({
    payload: item
 });
 
+
+/**
+ * Removes all of a single item from the cart
+ * @param item
+ * @returns {{payload: *, type: *}}
+ */
+export const removeAllFromCart = (item) => ({
+    type: REMOVE_ALL_FROM_CART,
+    payload: item
+});
+
+
+/**
+ * Updates the quantity of a single item in the cart
+ * @param payload  Object { id: items uuid, value: quantity value to set }
+ * @returns {{payload: *, type: *}}
+ */
+export const updateQuantity = (payload) => ({
+    type: UPDATE_QUANTITY,
+    payload,
+});
 
 /**
  * Filters the list of products given a boolean checklist
