@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import map from 'lodash/map';
 import uuid from 'lodash/uniqueId';
 import times from 'lodash/times';
-import isUndefined from 'lodash/isUndefined';
 import withContainer from "./components/withContainer";
 import {
     Icon,
@@ -16,7 +15,6 @@ import {
     Menu,
     Dropdown
 } from 'semantic-ui-react'
-import './App.css';
 import Sidebar from "./components/Sidebar/Sidebar";
 import {
     addToCart,
@@ -25,6 +23,7 @@ import {
     updateSortOptions
 } from "./actions/actions";
 import Logo from "./resources/images/Crafty_Yak_Logo.png";
+import './App.css';
 
 const mapStateToProps = (state) => ({
     products: state.products,
@@ -118,9 +117,6 @@ class App extends Component {
                             <Card.Description>
                                 {product.description}
                             </Card.Description>
-                            {
-                                isUndefined(this.state.productQuantity[product.id]) ? 'true' : 'false'
-                            }
                             <Button primary className="mt-3" onClick={() => this.props.addToCart({
                                 ...product,
                                 quantity: this.state.productQuantity[product.id] || 1,
