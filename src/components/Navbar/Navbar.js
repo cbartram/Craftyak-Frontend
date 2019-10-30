@@ -11,7 +11,7 @@ import {
     Search
 } from 'semantic-ui-react'
 import Logo from '../../resources/images/Crafty_Yak_Logo.png';
-import { removeFromCart, checkout } from "../../actions/actions";
+import { removeFromCart } from "../../actions/actions";
 import { matchSearchQuery } from "../../util";
 import { Link, withRouter } from 'react-router-dom';
 import './Navbar.css';
@@ -103,7 +103,7 @@ class Navbar extends Component {
             <div>
                 <Menu stackable className="menu-navbar">
                     <Menu.Item className="menu-logo">
-                        <img alt="logo" src={Logo}/>
+                        <img alt="logo" src={Logo} onClick={() => this.props.history.push("/")}/>
                         <span className="cursive-logo ml-2">Crafty Yak</span>
                     </Menu.Item>
                     <Menu.Menu position="right">

@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
 import times from "lodash/times";
-import {removeAllFromCart, updateQuantity} from "../../actions/actions";
+import {createStripePayment, removeAllFromCart, updateQuantity} from "../../actions/actions";
 
 const mapStateToProps = (state) => ({
     cart: state.cart
@@ -20,7 +20,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     removeAllFromCart: (payload) => dispatch(removeAllFromCart(payload)),
-    updateQuantity: (id, value) => dispatch(updateQuantity({ id, value }))
+    updateQuantity: (id, value) => dispatch(updateQuantity({ id, value })),
+    createStripePayment: (payload) => dispatch(createStripePayment(payload))
 });
 
 /**
@@ -95,12 +96,17 @@ class Checkout extends Component {
                             <Card.Content header={
                                 <div className="d-flex">
                                     <span style={{ fontSize: 17 }}>Subtotal</span>
-                                    <span className="ml-auto" style={{ fontSize: 17 }}>$1873.12</span>
+                                    <span className="ml-auto" style={{ fontSize: 17 }}>
+                                        ${
+                                        // TODO this is wrong
+                                            this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, })).price
+                                        }
+                                    </span>
                                 </div>
                             } />
                             <Card.Content>
                                 <div className="d-flex flex-column">
-                                <Button primary>Checkout</Button>
+                                <Button primary onClick={() => this.props.createStripePayment({ products: this.props.cart.items })}>Checkout</Button>
                                 <span className="text-muted-small">
                                     Tax and shipping will be calculated at checkout.
                                 </span>

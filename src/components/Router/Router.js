@@ -19,6 +19,8 @@ class Router extends Component {
                 <Switch>
                     <Route exact path="/" component={App} />
                     <Route path="/checkout" component={Checkout} />
+                    <Route path="/checkout/success" />
+                    <Route path="/checkout/failure" />
                     {/* Catch All unmatched paths with a 404 */}
                     <Route component={NotFound} />
                 </Switch>

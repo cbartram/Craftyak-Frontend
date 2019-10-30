@@ -20,6 +20,15 @@ export const getProducts = () => async (dispatch, getState) => {
 };
 
 /**
+ * Creates a new stripe payment and session
+ * @param payload Object the products that are being created
+ * @returns {Function}
+ */
+export const createStripePayment = (payload) => async (dispatch, getState) => {
+  await post(payload, constants.CREATE_PAYMENT_ENDPOINT, constants.CREATE_PAYMENT_REQUEST, constants.CREATE_PAYMENT_SUCCESS, constants.CREATE_PAYMENT_FAILURE, dispatch, getState, true);
+};
+
+/**
  * Creates a POST request to create a new order
  * @param payload
  * @returns {Function}
