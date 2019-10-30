@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import map from 'lodash/map';
 import uuid from 'lodash/uniqueId';
+import times from 'lodash/times';
+import isUndefined from 'lodash/isUndefined';
 import withContainer from "./components/withContainer";
 import {
     Icon,
@@ -12,12 +14,17 @@ import {
     Sticky,
     Responsive,
     Menu,
+    Dropdown
 } from 'semantic-ui-react'
 import './App.css';
 import Sidebar from "./components/Sidebar/Sidebar";
-import {addToCart, filterProducts, getProducts, removeFromCart, updateSortOptions} from "./actions/actions";
+import {
+    addToCart,
+    filterProducts,
+    removeFromCart,
+    updateSortOptions
+} from "./actions/actions";
 import Logo from "./resources/images/Crafty_Yak_Logo.png";
-import PaymentModal from "./components/PaymentModal/PaymentModal";
 
 const mapStateToProps = (state) => ({
     products: state.products,
@@ -38,7 +45,8 @@ class App extends Component {
         this.stickyRef = React.createRef();
         this.state = {
             sticky: false,
-            open: false
+            open: false,
+            productQuantity: {},
         };
     }
 
@@ -59,6 +67,17 @@ class App extends Component {
             }
         }
     }
+
+    /**
+     * Updates the quantity for each product
+     * @param quantity
+     * @param productId
+     */
+    updateQuantity(quantity, productId) {
+        const { productQuantity } = this.state;
+        this.setState({ productQuantity: { ...productQuantity, [productId]: quantity } });
+    }
+
 
     /**
      * Renders a set of placeholder cards while the real arts are loading
@@ -99,9 +118,29 @@ class App extends Component {
                             <Card.Description>
                                 {product.description}
                             </Card.Description>
-                            <Button primary className="mt-3" onClick={() => this.props.addToCart({ ...product, uuid: uuid('product-') })}>
+                            {
+                                isUndefined(this.state.productQuantity[product.id]) ? 'true' : 'false'
+                            }
+                            <Button primary className="mt-3" onClick={() => this.props.addToCart({
+                                ...product,
+                                quantity: this.state.productQuantity[product.id] || 1,
+                                uuid: uuid('product-')
+                            })}>
                                 Add to Cart &nbsp; <Icon name="plus" />
                             </Button>
+                            <Dropdown
+                                className="mt-2"
+                                placeholder="1"
+                                compact
+                                selection
+                                onChange={(e, data) => this.updateQuantity(data.value, product.id)}
+                                options={
+                                times(10, (index) => ({
+                                    key: index + 1,
+                                    text: index + 1,
+                                    value: index + 1,
+                                }))}
+                            />
                         </Card.Content>
                 }
                 {
