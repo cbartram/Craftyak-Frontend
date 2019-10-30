@@ -13,8 +13,8 @@ import {
 import Logo from '../../resources/images/Crafty_Yak_Logo.png';
 import { removeFromCart, checkout } from "../../actions/actions";
 import { matchSearchQuery } from "../../util";
+import { Link } from 'react-router-dom';
 import './Navbar.css';
-import PaymentModal from "../PaymentModal/PaymentModal";
 
 const mapStateToProps = (state) => ({
     products: state.products,
@@ -40,7 +40,6 @@ class Navbar extends Component {
             data: [], // Holds the full list of data being searched
             value: '',
             isLoading: false,
-            open: false, // True if the payment modal is open
         };
 
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -103,7 +102,6 @@ class Navbar extends Component {
     render() {
         return (
             <div>
-                <PaymentModal open={this.state.open} onClose={() => this.setState({ open: false })} />
                 <Menu stackable className="menu-navbar">
                     <Menu.Item className="menu-logo">
                         <img alt="logo" src={Logo}/>
@@ -166,7 +164,7 @@ class Navbar extends Component {
                             </Dropdown>
                         </Menu.Item>
                         <Menu.Item>
-                            <Button primary className="pill" onClick={() => this.props.checkout({ cart: this.props.cart, products: this.props.products.originalItems })}>
+                            <Button as={Link} to="/checkout" primary className="pill">
                                 Checkout
                             </Button>
                         </Menu.Item>

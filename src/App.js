@@ -85,7 +85,7 @@ class App extends Component {
      */
     renderCards(loading = this.props.products.isFetching) {
         return map(this.props.products.items || [{}, {}, {}, {}, {}], product => (
-            <Card key={product.id} className="col-md-3 col-lg-3 offset-md-2 col-sm-12 col-sm-offset-1 d-flex align-items-stretch m-2">
+            <Card key={product.id} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
                 {
                     loading ?
                         <Placeholder>

@@ -17,6 +17,11 @@ export const getProducts = () => async (dispatch, getState) => {
     await get(constants.GET_ALL_PRODUCTS_ENDPOINT, constants.GET_PRODUCTS_REQUEST, constants.GET_PRODUCTS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState, false);
 };
 
+/**
+ * Creates a POST request to create a new order
+ * @param payload
+ * @returns {Function}
+ */
 export const checkout = (payload) => async (dispatch, getState) => {
     await post(payload, constants.CREATE_ORDER_ENDPOINT, constants.CREATE_ORDER_REQUEST, constants.CREATE_ORDER_SUCCESS, constants.CREATE_ORDER_FAILURE, dispatch, getState, false);
 };
