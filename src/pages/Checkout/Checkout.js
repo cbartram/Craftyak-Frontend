@@ -12,7 +12,10 @@ import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
 import times from "lodash/times";
-import {createStripePayment, removeAllFromCart, updateQuantity} from "../../actions/actions";
+import { removeAllFromCart, updateQuantity} from "../../actions/actions";
+import {CREATE_PAYMENT_ENDPOINT, getRequestUrl} from "../../constants";
+const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
+
 
 const mapStateToProps = (state) => ({
     cart: state.cart
@@ -21,7 +24,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     removeAllFromCart: (payload) => dispatch(removeAllFromCart(payload)),
     updateQuantity: (id, value) => dispatch(updateQuantity({ id, value })),
-    createStripePayment: (payload) => dispatch(createStripePayment(payload))
 });
 
 /**
@@ -29,6 +31,19 @@ const mapDispatchToProps = (dispatch) => ({
  * @returns {*}
  */
 class Checkout extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            sessionId: null,
+        }
+    }
+
+    /**
+     * Renders an empty cart page if there
+     * are no items in the users cart.
+     * @returns {*}
+     */
     renderEmptyCart() {
         return (
             <div className="row page-bg-gray">
@@ -43,6 +58,38 @@ class Checkout extends Component {
                 </div>
             </div>
         )
+    }
+
+    /**
+     * Creates a new Stripe session by making an Http POST
+     * to the server to interact with stripe.
+     * @returns {Promise<void>}
+     */
+    async createStripeSession() {
+        try {
+            const params = {
+                method: 'POST',
+                headers: {
+                    Authorization: 'foo',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'x-api-key': 'api-key',
+                },
+                body: JSON.stringify({ products: this.props.cart.items }),
+            };
+
+            const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT), params);
+            const { session_id } = await(response).json();
+            console.log("Stripe session ID: ", session_id);
+            const {error} = await stripe.redirectToCheckout({ sessionId: session_id });
+
+            if(error) {
+                console.log("Error redirecting user to stripe checkout page: ", error);
+            }
+
+        } catch(err) {
+            console.log("[ERROR] Error creating new stripe session: ", err);
+        }
     }
 
     render() {
@@ -106,7 +153,7 @@ class Checkout extends Component {
                             } />
                             <Card.Content>
                                 <div className="d-flex flex-column">
-                                <Button primary onClick={() => this.props.createStripePayment({ products: this.props.cart.items })}>Checkout</Button>
+                                <Button loading={this.props.cart.isFetching} primary onClick={() => this.createStripeSession()}>Checkout</Button>
                                 <span className="text-muted-small">
                                     Tax and shipping will be calculated at checkout.
                                 </span>

@@ -83,10 +83,12 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
         case CREATE_PAYMENT_SUCCESS:
             return {
                 ...state,
+                isFetching: false,
             };
         case CREATE_PAYMENT_FAILURE:
             return {
                 ...state,
+                isFetching: false,
             };
         case CREATE_ORDER_REQUEST:
             console.log("Creating order request...");

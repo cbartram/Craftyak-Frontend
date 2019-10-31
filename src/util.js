@@ -188,27 +188,28 @@ export const post = async (body, path, requestType, successType, failureType, di
             body: JSON.stringify(body),
         };
 
-        const response = await (await fetch(path, params)).json();
-        debug && console.log('[DEBUG] Post Response: ', response);
+        const response = await fetch(getRequestUrl(path), params);
+        const responseBody = await (response).json();
+        debug && console.log('[DEBUG] Post Response: ', responseBody);
 
         return new Promise((resolve, reject) => {
             if (response.status >= 200 && response.status <= 210) {
                 doDispatch &&
                 dispatch({
                     type: successType,
-                    payload: response,
+                    payload: responseBody,
                 });
 
-                resolve(response);
+                resolve(responseBody);
             } else if (response.statusCode > 210 || typeof response.statusCode === 'undefined') {
                 // An error occurred
                 doDispatch &&
                 dispatch({
                     type: failureType,
-                    payload: { message: `There was an error retrieving data from the API: ${JSON.stringify(response)}`}
+                    payload: { message: `There was an error retrieving data from the API: ${JSON.stringify(responseBody)}`}
                 });
 
-                reject(response);
+                reject(responseBody);
             }
         });
     } catch(err) {
