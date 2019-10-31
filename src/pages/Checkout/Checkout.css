@@ -54,3 +54,7 @@
     font-weight: 400;
     line-height: 14px;
 }
+
+.MuiPaper-root {
+    background-color: #fafafa !important;
+}

@@ -8,14 +8,17 @@ import {
     Button,
     Card
 } from "semantic-ui-react";
+import { StepOne } from './StepOne';
 import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
 import times from "lodash/times";
 import { removeAllFromCart, updateQuantity} from "../../actions/actions";
 import {CREATE_PAYMENT_ENDPOINT, getRequestUrl} from "../../constants";
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
-
 
 const mapStateToProps = (state) => ({
     cart: state.cart
@@ -36,8 +39,27 @@ class Checkout extends Component {
 
         this.state = {
             sessionId: null,
+            activeStep: 0,
+            steps: ['Review', 'Shipping', 'Checkout']
         }
     }
+
+    setActiveStep(step) {
+        this.setState({ activeStep: step })
+    }
+
+
+    handleNext() {
+        this.setState((prevState) => ({
+            activeStep: prevState.activeStep + 1
+        }));
+    };
+
+    handleBack() {
+        this.setState((prevState) => ({
+            activeStep: prevState.activeStep - 1
+        }));
+    };
 
     /**
      * Renders an empty cart page if there
@@ -65,30 +87,54 @@ class Checkout extends Component {
      * to the server to interact with stripe.
      * @returns {Promise<void>}
      */
-    async createStripeSession() {
-        try {
-            const params = {
-                method: 'POST',
-                headers: {
-                    Authorization: 'foo',
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'x-api-key': 'api-key',
-                },
-                body: JSON.stringify({ products: this.props.cart.items }),
-            };
+    createStripeSession() {
+        this.setState({ loading: true }, async () => {
+            try {
+                const params = {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'foo',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'x-api-key': 'api-key',
+                    },
+                    body: JSON.stringify({ products: this.props.cart.items }),
+                };
 
-            const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT), params);
-            const { session_id } = await(response).json();
-            console.log("Stripe session ID: ", session_id);
-            const {error} = await stripe.redirectToCheckout({ sessionId: session_id });
+                const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT), params);
+                const { session_id } = await(response).json();
+                console.log("Stripe session ID: ", session_id);
+                const {error} = await stripe.redirectToCheckout({
+                    sessionId: session_id,
+                });
 
-            if(error) {
-                console.log("Error redirecting user to stripe checkout page: ", error);
+                if(error) {
+                    console.log("Error redirecting user to stripe checkout page: ", error);
+                }
+
+            } catch(err) {
+                console.log("[ERROR] Error creating new stripe session: ", err);
+            } finally {
+                this.setState({ loading: false });
             }
+        });
+    }
 
-        } catch(err) {
-            console.log("[ERROR] Error creating new stripe session: ", err);
+
+    renderStep(step) {
+        switch(step) {
+            case 0:
+                return (
+                    <StepOne
+                        items={this.props.cart.items}
+                        onUpdateQuantity={(uuid, value) => this.props.updateQuantity(uuid, value)}
+                        onRemove={(uuid) => this.props.removeAllFromCart(uuid)}
+                    />
+                );
+            case 1:
+                return <h2>Step 2</h2>;
+            case 2:
+                return <h3>Step 3</h3>;
         }
     }
 
@@ -98,45 +144,19 @@ class Checkout extends Component {
         return (
             <div>
                 <div className="row page-bg-gray">
+                    <div className="col-md-6 ml-auto mr-auto">
+                        <Stepper activeStep={this.state.activeStep} alternativeLabel>
+                            {this.state.steps.map(label => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </div>
+                </div>
+                <div className="row page-bg-gray">
                     <div className="col-md-5 ml-auto my-4">
-                        <Header as="h2" className="header-muted">Your Cart</Header>
-                        {
-                                        this.props.cart.items.map(product => {
-                                            return (
-                                                <Menu key={product.uuid}>
-                                                    <Menu.Item position="left">
-                                                        <Image src={product.heroImage} heigh={60} width={60}/>
-                                                    </Menu.Item>
-                                                    <Menu.Item position="left">
-                                                        {product.name}
-                                                    </Menu.Item>
-                                                    <Menu.Item>
-                                                        ${product.price}
-                                                    </Menu.Item>
-                                                    <Menu.Item position="right">
-                                                        <div className="d-flex flex-column">
-                                                            <Dropdown
-                                                                className="mt-2"
-                                                                placeholder="1"
-                                                                compact
-                                                                selection
-                                                                value={product.quantity}
-                                                                onChange={(e, data) => this.props.updateQuantity(product.uuid, data.value)}
-                                                                options={
-                                                                    times(10, (index) => ({
-                                                                        key: index + 1,
-                                                                        text: index + 1,
-                                                                        value: index + 1,
-                                                                    }))}
-                                                            />
-                                                            <Button className="button-link button-link-danger"
-                                                                    onClick={() => this.props.removeAllFromCart(product.uuid)}>Remove</Button>
-                                                        </div>
-                                                    </Menu.Item>
-                                                </Menu>
-                                            )
-                                        })
-                        }
+                        { this.renderStep(this.state.activeStep) }
                     </div>
                     <div className="col-md-4 " style={{ marginTop: 'calc(1.5rem + 45px)', marginBottom: '1.5rem'}}>
                         <Card>
@@ -153,7 +173,12 @@ class Checkout extends Component {
                             } />
                             <Card.Content>
                                 <div className="d-flex flex-column">
-                                <Button loading={this.props.cart.isFetching} primary onClick={() => this.createStripeSession()}>Checkout</Button>
+                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} className="mb-2">
+                                        {this.state.activeStep === this.state.steps.length - 1 ? 'Checkout' : 'Next'}
+                                    </Button>
+                                    <Button disabled={this.state.activeStep === 0} onClick={() => this.handleBack()}>
+                                        Back
+                                    </Button>
                                 <span className="text-muted-small">
                                     Tax and shipping will be calculated at checkout.
                                 </span>
