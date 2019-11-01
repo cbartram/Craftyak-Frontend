@@ -29,11 +29,12 @@ export default (state = { ...DEFAULT_STATE }, action) => {
             };
         case GET_PRODUCTS_SUCCESS:
             console.log(action.payload);
+            const data = action.payload.data.map(i => ({ ...i, quantity: 1 }));
             return {
                 ...state,
                 isFetching: false,
-                items: [...action.payload.data.map(i => ({ ...i, quantity: 1 }))],
-                originalItems: action.payload, // Holds a full list of original set of items for filtering later
+                items: [...data],
+                originalItems: [...data], // Holds a full list of original set of items for filtering later
             };
         case GET_PRODUCTS_FAILURE:
             return {
@@ -58,15 +59,15 @@ export default (state = { ...DEFAULT_STATE }, action) => {
                 }
             }
 
-            const d = state.originalItems.filter(({ category }) => {
+            const d = state.originalItems.filter(({ metadata }) => {
                 const keys = Object.keys(falsyAttributes);
-                if(category.mug && keys.includes("mug")) {
+                if(metadata.type === "mug" && keys.includes("mug")) {
                     return false;
-                } else if(category.sticker && keys.includes("sticker")) {
+                } else if(metadata.type === "sticker" && keys.includes("sticker")) {
                     return false;
-                } else if(category.shirt && keys.includes("shirt")) {
+                } else if(metadata.type === "shirt" && keys.includes("shirt")) {
                     return false;
-                } else if(category.cup && keys.includes("cup")) {
+                } else if(metadata.type === "cup" && keys.includes("cup")) {
                     return false
                 }
                 return true;
@@ -100,16 +101,13 @@ export default (state = { ...DEFAULT_STATE }, action) => {
 const getSortComparator = (value) => {
     switch(value) {
         case 'PRODUCT_TYPE':
-            return (a, b) => b.category.mug - a.category.mug ||
-                b.category.shirt - a.category.shirt||
-                b.category.cup - a.category.cup ||
-                b.category.sticker - a.category.sticker;
+            return (a, b) => b.metadata.type.localeCompare(a.metadata.type);
         case 'NEWEST':
-            return (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
+            return (a, b) => new Date(b.created) - new Date(a.created);
         case 'PRICE_HL':
-            return (a, b) => b.price - a.price;
+            return (a, b) => b.metadata.price - a.metadata.price;
         case 'PRICE_LH':
-            return (a, b) => a.price - b.price;
+            return (a, b) => a.metadata.price - b.metadata.price;
     }
 };
 
