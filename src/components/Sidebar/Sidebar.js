@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { Slider } from "react-semantic-ui-range";
 import { Form } from "semantic-ui-react";
 import './Sidebar.css';
 
@@ -41,17 +40,9 @@ export default class Sidebar extends Component {
    */
   getForm(value) {
     if(value === "PRICE") {
-      const prices = this.props.products.items.map(item => item.price);
-      const settings = {
-        start: [0, 100],
-        min: Math.min(...prices),
-        max: Math.max(...prices),
-        step: 1
-      };
       return (
           <div>
             <div className="d-flex flex-row">
-              {/*<Slider multiple color="red" settings={settings} />*/}
               <div className="d-flex flex-column">
                 <span>Min Price</span>
                 <span>{this.state.values[0]}</span>

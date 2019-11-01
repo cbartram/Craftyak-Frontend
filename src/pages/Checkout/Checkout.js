@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import {
     Header,
-    Menu,
-    Image,
-    Dropdown,
     Button,
     Card
 } from "semantic-ui-react";
@@ -12,7 +9,6 @@ import { StepOne } from './stepper/StepOne';
 import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
-import times from "lodash/times";
 import { removeAllFromCart, updateQuantity} from "../../actions/actions";
 import {CREATE_PAYMENT_ENDPOINT, getRequestUrl} from "../../constants";
 import Stepper from '@material-ui/core/Stepper';
@@ -136,6 +132,8 @@ class Checkout extends Component {
                 return <StepTwo />;
             case 2:
                 return <h3>Step 3</h3>;
+            default:
+                return <h3>Unknown</h3>
         }
     }
 
