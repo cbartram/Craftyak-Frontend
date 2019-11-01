@@ -6,6 +6,10 @@
     overflow-y: auto;
 }
 
+.ui.card:hover {
+    cursor: pointer !important;
+}
+
 .ui.secondary.pointing.menu:last-child {
     padding-right: 30px !important;
 }

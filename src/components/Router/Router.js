@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import App from '../../App';
 import NotFound from '../../pages/NotFound/NotFound';
 import Checkout from "../../pages/Checkout/Checkout";
+import ProductDetail from "../../pages/ProductDetail/ProductDetail";
 
 const mapStateToProps = state => ({
     auth: state.auth,
@@ -18,6 +19,7 @@ class Router extends Component {
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={App} />
+                    <Route path="/product/:slug" component={ProductDetail}></Route>
                     <Route path="/checkout" component={Checkout} />
                     <Route path="/checkout/success" />
                     <Route path="/checkout/failure" />

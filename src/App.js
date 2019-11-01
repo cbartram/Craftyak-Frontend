@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import map from 'lodash/map';
-import uuid from 'lodash/uniqueId';
-import times from 'lodash/times';
+import { withRouter } from 'react-router-dom';
 import withContainer from "./components/withContainer";
 import {
     Icon,
     Card,
     Image,
-    Button,
     Placeholder,
     Sticky,
     Responsive,
     Menu,
-    Dropdown
 } from 'semantic-ui-react'
 import Sidebar from "./components/Sidebar/Sidebar";
 import {
@@ -85,13 +82,13 @@ class App extends Component {
      */
     renderCards(loading = this.props.products.isFetching) {
         return map(this.props.products.items || [{}, {}, {}, {}, {}], product => (
-            <Card key={product.id} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
+            <Card key={product.id} onClick={() => this.props.history.push(`/product/${product.metadata.slug}`)} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
                 {
                     loading ?
                         <Placeholder>
                             <Placeholder.Image square />
                         </Placeholder>
-                        : <Image src={product.heroImage} wrapped ui />
+                        : <Image src={product.images[0]} height="262" width="262" />
                 }
                 {
                     loading ?
@@ -112,46 +109,11 @@ class App extends Component {
                         <Card.Content>
                             <Card.Header>{product.name}</Card.Header>
                             <Card.Meta>
-                                <span className='date'>${product.price}</span>
+                                <span className='date'>${product.metadata.price}</span>
                             </Card.Meta>
                             <Card.Description>
-                                {product.description}
+                                {product.caption}
                             </Card.Description>
-                            <Button primary className="mt-3" onClick={() => this.props.addToCart({
-                                ...product,
-                                quantity: this.state.productQuantity[product.id] || 1,
-                                uuid: uuid('product-')
-                            })}>
-                                Add to Cart &nbsp; <Icon name="plus" />
-                            </Button>
-                            <Dropdown
-                                className="mt-2"
-                                placeholder="1"
-                                compact
-                                selection
-                                onChange={(e, data) => this.updateQuantity(data.value, product.id)}
-                                options={
-                                times(10, (index) => ({
-                                    key: index + 1,
-                                    text: index + 1,
-                                    value: index + 1,
-                                }))}
-                            />
-                        </Card.Content>
-                }
-                {
-                    loading ?
-                        <Card.Content extra>
-                            <Placeholder>
-                                <Placeholder.Header>
-                                    <Placeholder.Line length='long' />
-                                </Placeholder.Header>
-                            </Placeholder>
-                        </Card.Content>
-                        :
-                        <Card.Content extra>
-                            <Icon name="truck" />
-                            Shipping {product.processingTime} days
                         </Card.Content>
                 }
             </Card>
@@ -257,4 +219,8 @@ class App extends Component {
     }
 }
 
-export default withContainer(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withContainer(
+    withRouter(
+        connect(mapStateToProps, mapDispatchToProps)(App)
+    )
+);

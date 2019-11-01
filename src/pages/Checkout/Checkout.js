@@ -8,7 +8,7 @@ import {
     Button,
     Card
 } from "semantic-ui-react";
-import { StepOne } from './StepOne';
+import { StepOne } from './stepper/StepOne';
 import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
@@ -18,6 +18,7 @@ import {CREATE_PAYMENT_ENDPOINT, getRequestUrl} from "../../constants";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import {StepTwo} from "./stepper/StepTwo";
 const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
 
 const mapStateToProps = (state) => ({
@@ -132,7 +133,7 @@ class Checkout extends Component {
                     />
                 );
             case 1:
-                return <h2>Step 2</h2>;
+                return <StepTwo />;
             case 2:
                 return <h3>Step 3</h3>;
         }
