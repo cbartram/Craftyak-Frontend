@@ -164,7 +164,7 @@ class Checkout extends Component {
                                     <span style={{ fontSize: 17 }}>Subtotal</span>
                                     <span className="ml-auto" style={{ fontSize: 17 }}>
                                         ${
-                                        // TODO this is wrong
+                                            // TODO this is wrong
                                             this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, })).price
                                         }
                                     </span>

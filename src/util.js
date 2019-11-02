@@ -221,3 +221,45 @@ export const post = async (body, path, requestType, successType, failureType, di
         });
     }
 };
+
+/**
+ * Formats a word by capitalizing the first
+ * letter and replacing underscores with spaces
+ * @param word String words
+ * @returns {string}
+ */
+export const format = (word) => {
+    word = word.split("_").join(" ");
+    return word.charAt(0).toUpperCase() + word.slice(1, word.length);
+};
+
+/**
+ * Given an attribute name like size or color returns
+ * a list of possible values for that attribute.
+ * Size may return ["small", "medium", "large"]
+ */
+export const getAttributeValues = (attributeName) => {
+    const upperAttributeName = attributeName.toUpperCase();
+    switch (upperAttributeName) {
+        // TODO no need to map these im just lazy they should all return objects usable by a <Select /> component
+        case "SIZE":
+            return ['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL'].map(i => ({ key:i , value: i, text: i}));
+        case "COLOR":
+            return ['Red', 'Green', 'Blue', 'Orange', 'Yellow', 'White', 'Black'].map(i => ({ key:i , value: i, text: i})); // TODO map these to hex colors
+        case "MATERIAL_MUG":
+            return ['Ceramic', 'Matte', 'Porcelean'].map(i => ({ key:i , value: i, text: i}));
+        case "MATERIAL_SHIRT":
+            return ['Dryfit', 'Cotton', 'Nylon', 'Polyester'].map(i => ({ key:i , value: i, text: i}));
+        default:
+            return []
+    }
+};
+
+/**
+ * Given a set of attribute names and a value for
+ * each name this function determines the SKU for the permutation.
+ * i.e name = [color, size] and value = [white, large] => sku_...
+ */
+export const getSKU = (attributeNames, attributeValues) => {
+
+};

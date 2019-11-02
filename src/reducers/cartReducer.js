@@ -39,7 +39,7 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
         case REMOVE_FROM_CART:
             const data = state.items.map(item => {
                 // This is not the item you are looking for (yes this was a reference to star wars)
-                if(item.uuid !== action.payload) {
+                if(item.id !== action.payload) {
                     return item;
                 } else {
                     // Try to subtract 1 from the quantity
@@ -63,7 +63,7 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
             };
         case UPDATE_QUANTITY:
             const updatedItems = state.items.map(item => {
-                if(item.uuid === action.payload.id) {
+                if(item.id === action.payload.id) {
                     return { ...item, quantity: action.payload.value}
                 }
                 return item;
