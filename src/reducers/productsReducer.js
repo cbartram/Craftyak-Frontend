@@ -28,7 +28,6 @@ export default (state = { ...DEFAULT_STATE }, action) => {
                 isFetching: true,
             };
         case GET_PRODUCTS_SUCCESS:
-            console.log(action.payload);
             const data = action.payload.data.map(i => ({ ...i, quantity: 1 }));
             return {
                 ...state,

@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import isNil from 'lodash/isNil';
+import takeRight from 'lodash/takeRight';
 import {getRequestUrl} from "./constants";
 let currentStore;
 // Object holding action types as keys and promises as values which need resolutions
@@ -229,7 +230,7 @@ export const post = async (body, path, requestType, successType, failureType, di
  * @returns {string}
  */
 export const format = (word) => {
-    word = word.split("_").join(" ");
+    word = word.split("_")[0];
     return word.charAt(0).toUpperCase() + word.slice(1, word.length);
 };
 
@@ -239,27 +240,117 @@ export const format = (word) => {
  * Size may return ["small", "medium", "large"]
  */
 export const getAttributeValues = (attributeName) => {
-    const upperAttributeName = attributeName.toUpperCase();
-    switch (upperAttributeName) {
-        // TODO no need to map these im just lazy they should all return objects usable by a <Select /> component
+    switch (attributeName.toUpperCase()) {
         case "SIZE":
-            return ['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL'].map(i => ({ key:i , value: i, text: i}));
+            return {
+                mapsTo: 'size',
+                options: [{
+                    key: 'XS',
+                    value: 'XS',
+                    text: 'XS',
+                }, {
+                    key: 'Small',
+                    value: 'Small',
+                    text: 'Small',
+                }, {
+                    key: 'Medium',
+                    value: 'Medium',
+                    text: 'Medium',
+                }, {
+                    key: 'Large',
+                    value: 'Large',
+                    text: 'Large',
+                }, {
+                    key: 'XL',
+                    value: 'XL',
+                    text: 'XL',
+                }, {
+                    key: 'XXL',
+                    value: 'XXL',
+                    text: 'XXL',
+                }]
+            };
         case "COLOR":
-            return ['Red', 'Green', 'Blue', 'Orange', 'Yellow', 'White', 'Black'].map(i => ({ key:i , value: i, text: i})); // TODO map these to hex colors
+            return {
+                mapsTo: 'color',
+                options: ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607d8b"]
+            };
         case "MATERIAL_MUG":
-            return ['Ceramic', 'Matte', 'Porcelean'].map(i => ({ key:i , value: i, text: i}));
+            return {
+                mapsTo: 'material_mug',
+                options: [{
+                    key: 'Ceramic',
+                    value: 'Ceramic',
+                    text: 'Ceramic'
+                }, {
+                    key: 'Matte',
+                    value: 'Matte',
+                    text: 'Matte'
+                }, {
+                    key: 'Porcelain',
+                    value: 'Porcelain',
+                    text: 'Porcelain'
+                }]
+            };
         case "MATERIAL_SHIRT":
-            return ['Dryfit', 'Cotton', 'Nylon', 'Polyester'].map(i => ({ key:i , value: i, text: i}));
+            return {
+                mapsTo: 'material_shirt',
+                options: [{
+                    key: 'Cotton',
+                    value: 'Cotton',
+                    text: 'Cotton'
+                }, {
+                    key: 'Dryfit',
+                    value: 'Dryfit',
+                    text: 'Dryfit'
+                }, {
+                    key: 'Nylon',
+                    value: 'Nylon',
+                    text: 'Nylon'
+                }, {
+                    key: 'Polyester',
+                    value: 'Polyester',
+                    text: 'Polyester'
+                }]
+            };
         default:
-            return []
+            return {
+                mapsTo: 'none',
+                options: []
+            }
     }
+};
+
+/**
+ * Formats a price from cents ¢ to a
+ * dollar cents string with the $
+ * @param amount Int price in pennies
+ */
+export const formatPrice = (amount) => {
+    return (amount / 100).toFixed(2);
 };
 
 /**
  * Given a set of attribute names and a value for
  * each name this function determines the SKU for the permutation.
  * i.e name = [color, size] and value = [white, large] => sku_...
+ * Note attribute names and values must be arrays of the same size
  */
-export const getSKU = (attributeNames, attributeValues) => {
+export const getSKU = function(skuList, attributeNames, attributeValues) {
+    if(attributeNames.length !== attributeValues.length) {
+        throw new Error("Attribute names and values must be of the same length.");
+    }
 
+    console.log("Creating filter for list: ", skuList);
+    console.log("Attribute Names: ", attributeNames);
+    console.log("Attribute Values: ", attributeValues);
+    if(skuList.length === 1) {
+        return skuList[0];
+    } else if(skuList.length === 0) {
+        // There are no combinations of sku's that match the attribute values
+        return null;
+    }
+    // This contains all sku's with attribute X in array [X, Y, Z] on the first iteration
+    const filter = skuList.filter(sku => sku.attributes[attributeNames[0]] === attributeValues[0]);
+    return getSKU(filter, takeRight(attributeNames, attributeNames.length - 1), takeRight(attributeValues, attributeValues.length - 1));
 };

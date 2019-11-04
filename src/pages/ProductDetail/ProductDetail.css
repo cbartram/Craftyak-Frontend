@@ -1,0 +1,17 @@
+.image-gallery-thumbnail.active {
+   opacity: 1.0;
+    border: 0 !important;
+}
+
+.image-gallery-thumbnail {
+    display: inline-block;
+    border: 0;
+    opacity: 0.6;
+    transition: border .3s ease-out;
+    width: 100px;
+}
+
+
+.image-gallery-thumbnail:hover {
+    opacity: 0.8;
+}

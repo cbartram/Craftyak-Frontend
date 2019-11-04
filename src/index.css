@@ -76,6 +76,10 @@ a {
   font-weight: 700;
 }
 
+.ui.button.primary:disabled {
+  opacity: .6;
+}
+
 .ui.button.pill {
   border-radius: 1.8125rem;
 }
