@@ -73,10 +73,10 @@ class Navbar extends Component {
     renderSearchRow(item) {
         return (
             <div className="d-flex align-items-center px-3 py-2 search-row-item">
-                <Image avatar src={item.heroImage} />
+                <Image avatar src={item.images[0]} />
                 <div className="d-flex flex-column">
                     {matchSearchQuery(this.state.value, item.name)}
-                    <small className="text-muted">${item.price}</small>
+                    <small className="text-muted">${item.metadata.price}</small>
                 </div>
             </div>
         )
