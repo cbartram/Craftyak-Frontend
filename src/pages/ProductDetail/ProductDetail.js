@@ -34,7 +34,6 @@ class ProductDetail extends Component {
 
     this.state = {
       product: null,
-      viableSkus: [], // A set of viable skus which match the criteria selected by the users
       sku: null,
       skuMeta: {}, // Attributes & Quantity for the sku about to be added to the cart
       showErrorMessage: false
@@ -45,7 +44,6 @@ class ProductDetail extends Component {
     // Find the product from the slug
     const product = this.props.products.filter(product => product.metadata.slug === this.props.match.params.slug)[0];
     console.log(product);
-    console.log(getSKU(product.skus, ['color', 'size', 'material_shirt'], ['Brown', 'Medium', 'Cotton']));
     this.setState({ product });
   }
 
@@ -55,13 +53,28 @@ class ProductDetail extends Component {
    * @param data
    */
   onSelectChange(attribute, data) {
-      const viableSkus = this.state.product.skus.filter(sku => sku.attributes[attribute] === data.value);
-      if(viableSkus.length === 0) {
-        // TODO Search the entire stack of SKU's for a viable one matching multiple criteria
-          this.setState({ errorMessage: true });
-      } else {
-        this.setState({viableSkus, sku: viableSkus[0], skuMeta: { ...this.state.skuMeta, [attribute]: data.value }})
-      }
+      this.setState((prevState) => {
+        const { skuMeta, product } = prevState;
+        const attributeNames = [...Object.keys(skuMeta), attribute];
+        const attributeValues = [...Object.values(skuMeta), data.value];
+        console.log('Attribute Names: ', attributeNames);
+        console.log('Attribute Values: ', attributeValues);
+        const sku = getSKU(product.skus, attributeNames, attributeValues);
+        console.log('SKU: ', sku);
+        if(sku !== null) {
+          return {
+            sku,
+            skuMeta: {
+              ...prevState.skuMeta,
+              [attribute]: data.value
+            }
+          }
+        } else {
+          return {
+            showErrorMessage: true,
+          }
+        }
+      });
   }
 
   render() {
@@ -76,7 +89,7 @@ class ProductDetail extends Component {
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   open={this.state.showErrorMessage}
                   onClose={() => this.setState({ showErrorMessage: false })}
-                  message={<span id="message-id">I love snacks</span>}
+                  message="The product you selected is currently out of stock."
               />
             <div className="row my-3">
               <div className="col-md-6 offset-md-2 pl-2" ref={this.galleryRef}>
@@ -89,7 +102,7 @@ class ProductDetail extends Component {
                 </Sticky>
               </div>
               <div className="col-md-3">
-                <Card>
+                <Card className="bg-light-blue">
                   <Card.Content header={
                     <div className="d-flex">
                       <span style={{ fontSize: 17 }}>
@@ -113,7 +126,7 @@ class ProductDetail extends Component {
                                 <span>Color</span>
                                 <div className="py-3">
                                   <CirclePicker
-                                      onChangeComplete={(color) => this.onSelectChange(attribute, color.hex)}
+                                      onChangeComplete={(color) => this.onSelectChange(attribute, { value: color.hex })}
                                       colors={attributeValues.options}
                                   />
                                 </div>
@@ -163,7 +176,7 @@ class ProductDetail extends Component {
                   </Card.Content>
                 </Card>
 
-                <Card>
+                <Card className="bg-light-blue">
                   <Card.Content header="Item Details"/>
                   <Card.Content>
                     <h3>Description</h3>

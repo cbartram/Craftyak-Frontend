@@ -273,7 +273,7 @@ export const getAttributeValues = (attributeName) => {
         case "COLOR":
             return {
                 mapsTo: 'color',
-                options: ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607d8b"]
+                options: ["#000000", "#ffffff"]
             };
         case "MATERIAL_MUG":
             return {
@@ -290,6 +290,19 @@ export const getAttributeValues = (attributeName) => {
                     key: 'Porcelain',
                     value: 'Porcelain',
                     text: 'Porcelain'
+                }]
+            };
+        case "STYLE":
+            return {
+                mapsTo: 'style',
+                options: [{
+                    key: 'T-Shirt',
+                    value: 't-shirt',
+                    text: 'T-Shirt',
+                }, {
+                    key: 'Tank Top',
+                    value: 'tank',
+                    text: 'Tank Top'
                 }]
             };
         case "MATERIAL_SHIRT":
@@ -341,14 +354,16 @@ export const getSKU = function(skuList, attributeNames, attributeValues) {
         throw new Error("Attribute names and values must be of the same length.");
     }
 
-    console.log("Creating filter for list: ", skuList);
-    console.log("Attribute Names: ", attributeNames);
-    console.log("Attribute Values: ", attributeValues);
+
     if(skuList.length === 1) {
         return skuList[0];
     } else if(skuList.length === 0) {
         // There are no combinations of sku's that match the attribute values
         return null;
+    } else if(attributeValues.length === 0 || attributeNames.length === 0) {
+        // There are multiple SKU's that fit the search criteria but no more attributes to filter on simply
+        // return the best fit i.e given ['size' => 'small'] may product [{}, {}, {}, {}] we have to just choose one
+        return skuList[0];
     }
     // This contains all sku's with attribute X in array [X, Y, Z] on the first iteration
     const filter = skuList.filter(sku => sku.attributes[attributeNames[0]] === attributeValues[0]);

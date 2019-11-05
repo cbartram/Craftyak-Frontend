@@ -15,3 +15,7 @@
 .image-gallery-thumbnail:hover {
     opacity: 0.8;
 }
+
+.bg-light-blue {
+    background: #f6f9fc !important;
+}
