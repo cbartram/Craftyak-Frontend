@@ -19,3 +19,7 @@
 .bg-light-blue {
     background: #f6f9fc !important;
 }
+
+.MuiSnackbarContent-root {
+    background: rgb(209, 87, 82) !important;
+}

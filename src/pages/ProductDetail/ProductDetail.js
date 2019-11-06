@@ -5,13 +5,16 @@ import withContainer from '../../components/withContainer';
 import times from 'lodash/times';
 import uniqueId from 'lodash/uniqueId';
 import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import './ProductDetail.css';
 import {
   Button,
   Card,
   Dropdown,
   Select,
-  List, Sticky
+  List,
+  Sticky,
+  Icon
 } from "semantic-ui-react";
 import ImageGallery from 'react-image-gallery';
 import { CirclePicker } from 'react-color';
@@ -48,15 +51,28 @@ class ProductDetail extends Component {
   }
 
   /**
-   * Finds an SKU
-   * @param attribute
-   * @param data
+   * Finds an SKU given an attribute and a value
+   * @param attribute String an attribute like size, color, or material
+   * @param data String the attributes data like small, red, or cotton
    */
   onSelectChange(attribute, data) {
       this.setState((prevState) => {
         const { skuMeta, product } = prevState;
-        const attributeNames = [...Object.keys(skuMeta), attribute];
-        const attributeValues = [...Object.values(skuMeta), data.value];
+
+        let values = Object.values(skuMeta);
+        let keys = Object.keys(skuMeta);
+        // Before we add the attribute to the list we must check for duplicate values remove them
+        keys.forEach((name, index) => {
+          if(name === attribute) {
+            // Remove the value in attribute values array at this index
+            values.splice(index, 1);
+            keys.splice(index, 1);
+          }
+        });
+
+        const attributeNames = [...keys, attribute];
+        const attributeValues = [...values, data.value];
+
         console.log('Attribute Names: ', attributeNames);
         console.log('Attribute Values: ', attributeValues);
         const sku = getSKU(product.skus, attributeNames, attributeValues);
@@ -84,13 +100,28 @@ class ProductDetail extends Component {
 
       return (
           <div>
-              <Snackbar
-                  variant="error"
-                  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  open={this.state.showErrorMessage}
-                  onClose={() => this.setState({ showErrorMessage: false })}
-                  message="The product you selected is currently out of stock."
+            <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={this.state.showErrorMessage}
+                autoHideDuration={6000}
+                onClose={() => {}}
+            >
+              <SnackbarContent
+                  className=""
+                  message={
+                    <span>
+                     <Icon name="cancel" />
+                     Could not locate an SKU matching search criteria
+                    </span>
+                  }
+                  action={[
+                    <Icon name="x" />
+                  ]}
               />
+            </Snackbar>
             <div className="row my-3">
               <div className="col-md-6 offset-md-2 pl-2" ref={this.galleryRef}>
                 <Sticky context={this.galleryRef}>
@@ -166,7 +197,7 @@ class ProductDetail extends Component {
                     />
                     </div>
                     <div className="d-flex flex-column">
-                      <Button primary onClick={() => {}} className="mb-2" disabled={this.state.product.attributes.length !== Object.keys(this.state.skuMeta).length}>
+                      <Button primary onClick={() => {}} className="mb-2" disabled={this.state.product.attributes.length + 1 !== Object.keys(this.state.skuMeta).length}>
                         Add to Cart
                       </Button>
                       <span className="text-muted-small">

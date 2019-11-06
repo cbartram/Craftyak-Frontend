@@ -354,6 +354,9 @@ export const getSKU = function(skuList, attributeNames, attributeValues) {
         throw new Error("Attribute names and values must be of the same length.");
     }
 
+    // Filter out the quantity attribute name and value as quantity is never filterable on an SKU
+    attributeNames = attributeNames.filter(i => i !== 'quantity');
+    attributeValues = attributeValues.filter(i => typeof i !== 'number');
 
     if(skuList.length === 1) {
         return skuList[0];
