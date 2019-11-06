@@ -46,7 +46,6 @@ class ProductDetail extends Component {
   componentDidMount() {
     // Find the product from the slug
     const product = this.props.products.filter(product => product.metadata.slug === this.props.match.params.slug)[0];
-    console.log(product);
     this.setState({ product });
   }
 

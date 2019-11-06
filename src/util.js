@@ -272,10 +272,10 @@ export const getAttributeValues = (attributeName) => {
                 mapsTo: 'sticker_type',
                 options: optionify(['Heat Transfer Vinyl', 'Standard Vinyl'])
             };
-        case "MATERIAL_MUG":
+        case "MUG_MATERIAL":
             return {
-                mapsTo: 'material_mug',
-                options: optionify(['Ceramic', 'Matte', 'Porcalean'])
+                mapsTo: 'MUG_MATERIAL',
+                options: optionify(['Ceramic', 'Matte', 'Porcelain'])
             };
         case "STYLE":
             return {
