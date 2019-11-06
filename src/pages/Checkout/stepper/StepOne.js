@@ -16,15 +16,15 @@ export const StepOne = (props) => {
             {
                 props.items.map(product => {
                     return (
-                        <Menu key={product.uuid}>
+                        <Menu key={product.id}>
                             <Menu.Item position="left">
-                                <Image src={product.heroImage} heigh={60} width={60}/>
+                                <Image src={product.images[0]} heigh={60} width={60}/>
                             </Menu.Item>
                             <Menu.Item position="left">
                                 {product.name}
                             </Menu.Item>
                             <Menu.Item>
-                                ${product.price}
+                                ${(product.price / 100).toFixed(2)}
                             </Menu.Item>
                             <Menu.Item position="right">
                                 <div className="d-flex flex-column">
@@ -34,7 +34,7 @@ export const StepOne = (props) => {
                                         compact
                                         selection
                                         value={product.quantity}
-                                        onChange={(e, data) => props.onUpdateQuantity(product.uuid, data.value)}
+                                        onChange={(e, data) => props.onUpdateQuantity(product.id, data.value)}
                                         options={
                                             times(10, (index) => ({
                                                 key: index + 1,
@@ -43,7 +43,7 @@ export const StepOne = (props) => {
                                             }))}
                                     />
                                     <Button className="button-link button-link-danger"
-                                            onClick={() => props.onRemove(product.uuid)}>Remove</Button>
+                                            onClick={() => props.onRemove(product.id)}>Remove</Button>
                                 </div>
                             </Menu.Item>
                         </Menu>

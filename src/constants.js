@@ -34,6 +34,7 @@ export const IS_PROD = window.location.hostname !== 'localhost' || process.env.R
 export const GET_ALL_PRODUCTS_ENDPOINT = '/api/v1/products/';
 export const CREATE_ORDER_ENDPOINT = '/api/v1/orders/create'; // Checkout endpoint
 export const CREATE_PAYMENT_ENDPOINT = '/api/v1/payments/create';
+export const PERSIST_ADDRESS_ENDPOINT = '/api/v1/address/create';
 
 // Prod Params
 export const PROD_URL = 'https://2147bwmah5.execute-api.us-east-1.amazonaws.com/prod';

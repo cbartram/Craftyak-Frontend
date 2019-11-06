@@ -10,11 +10,11 @@ import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
 import { removeAllFromCart, updateQuantity} from "../../actions/actions";
-import {CREATE_PAYMENT_ENDPOINT, getRequestUrl} from "../../constants";
+import {CREATE_PAYMENT_ENDPOINT, PERSIST_ADDRESS_ENDPOINT, getRequestUrl} from "../../constants";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {StepTwo} from "./stepper/StepTwo";
+import StepTwo from "./stepper/StepTwo";
 const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
 
 const mapStateToProps = (state) => ({
@@ -37,21 +37,52 @@ class Checkout extends Component {
         this.state = {
             sessionId: null,
             activeStep: 0,
-            steps: ['Review', 'Shipping', 'Checkout']
+            steps: ['Review', 'Shipping', 'Checkout'],
+            data: {} // Address data from step two
         }
     }
 
-    setActiveStep(step) {
-        this.setState({ activeStep: step })
+    async validateAddress() {
+        try {
+            const params = {
+                method: 'POST',
+                headers: {
+                    Authorization: 'foo',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'x-api-key': 'api-key',
+                },
+                body: JSON.stringify({ ...this.state.data }),
+            };
+
+            const response = await fetch(getRequestUrl(PERSIST_ADDRESS_ENDPOINT), params);
+            const d = await (response).json();
+            console.log("Response: ", d);
+        } catch(err) {
+            console.log("Failed to validate address something went wrong in the network call: ", err);
+        }
     }
 
 
+    /**
+     * Increases the stepper's currently
+     * active step
+     */
     handleNext() {
-        this.setState((prevState) => ({
-            activeStep: prevState.activeStep + 1
-        }));
+        this.setState((prevState) => {
+            // Users are submitting the form for their address validate it
+            if(prevState.activeStep === 1) {
+                this.validateAddress();
+            }
+            return {
+                activeStep: prevState.activeStep + 1
+            }
+        });
     };
 
+    /**
+     * Decrements the steppers active step
+     */
     handleBack() {
         this.setState((prevState) => ({
             activeStep: prevState.activeStep - 1
@@ -117,6 +148,17 @@ class Checkout extends Component {
         });
     }
 
+    /**
+     * Handles updating local state when form fields are entered
+     */
+    onFieldUpdate(value, field) {
+        this.setState((prevState) => ({
+            data: {
+                ...prevState.data,
+                [field]: value,
+            }
+        }))
+    }
 
     renderStep(step) {
         switch(step) {
@@ -129,7 +171,7 @@ class Checkout extends Component {
                     />
                 );
             case 1:
-                return <StepTwo />;
+                return <StepTwo onFieldUpdate={(value, field) => this.onFieldUpdate(value, field)} />;
             case 2:
                 return <h3>Step 3</h3>;
             default:

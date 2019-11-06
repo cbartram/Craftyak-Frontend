@@ -241,7 +241,7 @@ export const format = (word) => {
  * @param list List of elements
  * @returns {*}
  */
-const optionify = (list) => {
+export const optionify = (list) => {
     return list.map(val => ({ key: val, value: val, text: val }));
 };
 
