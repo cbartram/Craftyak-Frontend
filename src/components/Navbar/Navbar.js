@@ -136,20 +136,20 @@ class Navbar extends Component {
                                             </Dropdown.Item> :
                                             this.props.cart.items.map(product => {
                                                 return (
-                                                    <Dropdown.Item key={product.uuid}>
+                                                    <Dropdown.Item key={product.id}>
                                                         <List relaxed>
                                                             <List.Item>
-                                                                <Image avatar src={product.heroImage} />
+                                                                <Image avatar src={product.images[0]} />
                                                                 <List.Content>
                                                                     <List.Header as='h4'>
                                                                         {product.name}
                                                                         &nbsp;
-                                                                        <Button className="hidden" size="mini" icon onClick={() => this.props.removeFromCart(product.uuid)}>
+                                                                        <Button className="hidden" size="mini" icon onClick={() => this.props.removeFromCart(product.id)}>
                                                                             <Icon name="x" />
                                                                         </Button>
                                                                     </List.Header>
                                                                     <List.Description>
-                                                                        ${product.price} &nbsp;
+                                                                        ${(product.price / 100).toFixed(2)} &nbsp;
                                                                         <span className="badge badge-primary">{product.quantity}</span>
                                                                     </List.Description>
                                                                 </List.Content>

@@ -18,7 +18,7 @@ import {
 } from "semantic-ui-react";
 import ImageGallery from 'react-image-gallery';
 import { CirclePicker } from 'react-color';
-import { updateQuantity } from "../../actions/actions";
+import { updateQuantity, addToCart } from "../../actions/actions";
 import {format, formatPrice, getAttributeValues, getSKU} from "../../util";
 
 const mapStateToProps = state => ({
@@ -27,6 +27,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateQuantity: (id, value) => dispatch(updateQuantity({ id, value })),
+  addToCart: (quantity, product, sku) => dispatch(addToCart({
+    quantity,
+    sku: {
+      ...sku,
+      name: product.name,
+      images: product.images,
+    }
+  })),
 });
 
 class ProductDetail extends Component {
@@ -72,10 +80,7 @@ class ProductDetail extends Component {
         const attributeNames = [...keys, attribute];
         const attributeValues = [...values, data.value];
 
-        console.log('Attribute Names: ', attributeNames);
-        console.log('Attribute Values: ', attributeValues);
         const sku = getSKU(product.skus, attributeNames, attributeValues);
-        console.log('SKU: ', sku);
         if(sku !== null) {
           return {
             sku,
@@ -193,7 +198,7 @@ class ProductDetail extends Component {
                     />
                     </div>
                     <div className="d-flex flex-column">
-                      <Button primary onClick={() => {}} className="mb-2" disabled={this.state.product.attributes.length + 1 !== Object.keys(this.state.skuMeta).length}>
+                      <Button primary onClick={() => this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku)} className="mb-2" disabled={this.state.product.attributes.length + 1 !== Object.keys(this.state.skuMeta).length}>
                         Add to Cart
                       </Button>
                       <span className="text-muted-small">

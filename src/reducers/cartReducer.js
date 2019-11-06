@@ -20,7 +20,7 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
     switch (action.type) {
         case ADD_TO_CART:
             // First group the cart items by their name i.e { itemOne: [{...}, {...}], itemTwo: [{...}] }
-            const items = groupBy([...state.items, action.payload], 'name');
+            const items = groupBy([...state.items, { ...action.payload.sku, quantity: action.payload.quantity }], 'name');
             const updatedQuantity = [];
 
             // For each "set" of products i.e 3 mugs, 2 cups, 9 shirts
@@ -59,7 +59,7 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
         case REMOVE_ALL_FROM_CART:
             return {
                 ...state,
-                items: [...state.items.filter(product => product.uuid !== action.payload)]
+                items: [...state.items.filter(product => product.id !== action.payload)]
             };
         case UPDATE_QUANTITY:
             const updatedItems = state.items.map(item => {
