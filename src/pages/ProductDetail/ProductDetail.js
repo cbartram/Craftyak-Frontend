@@ -107,19 +107,16 @@ class ProductDetail extends Component {
                 }}
                 open={this.state.showErrorMessage}
                 autoHideDuration={6000}
-                onClose={() => {}}
+                onClose={() => this.setState({ showErrorMessage: false })}
             >
               <SnackbarContent
-                  className=""
                   message={
                     <span>
-                     <Icon name="cancel" />
+                     <Icon name="warning" />
                      Could not locate an SKU matching search criteria
                     </span>
                   }
-                  action={[
-                    <Icon name="x" />
-                  ]}
+                  action={<Icon name="cancel" onClick={() => this.setState({ showErrorMessage: false })} />}
               />
             </Snackbar>
             <div className="row my-3">
@@ -151,7 +148,7 @@ class ProductDetail extends Component {
                       this.state.product.attributes.map(attribute => {
                         const id = uniqueId();
                         const attributeValues = getAttributeValues(attribute);
-                        if(attribute.toUpperCase() === "COLOR")
+                        if(attribute.toUpperCase().includes("COLOR"))
                           return (
                               <div key={id}>
                                 <span>Color</span>
@@ -170,7 +167,7 @@ class ProductDetail extends Component {
                                 <Select
                                     onChange={(e, data) => this.onSelectChange(attribute, data)}
                                     value={this.state.skuMeta[attribute]} className="my-2"
-                                    placeholder={`Select a ${attribute}`} options={attributeValues.options}
+                                    placeholder={`Select a ${format(attribute)}`} options={attributeValues.options}
                                 />
                               </div>
                             </div>

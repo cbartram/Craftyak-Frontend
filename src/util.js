@@ -230,8 +230,19 @@ export const post = async (body, path, requestType, successType, failureType, di
  * @returns {string}
  */
 export const format = (word) => {
-    word = word.split("_")[0];
-    return word.charAt(0).toUpperCase() + word.slice(1, word.length);
+    return word.split("_").map(wordPart => wordPart.charAt(0).toUpperCase() + wordPart.slice(1, wordPart.length)).join(' ');
+};
+
+
+/**
+ * Takes a standard list and formats it so that it
+ * will work in Semantic ui Dropdowns and Select components as
+ * a set of options
+ * @param list List of elements
+ * @returns {*}
+ */
+const optionify = (list) => {
+    return list.map(val => ({ key: val, value: val, text: val }));
 };
 
 /**
@@ -244,53 +255,27 @@ export const getAttributeValues = (attributeName) => {
         case "SIZE":
             return {
                 mapsTo: 'size',
-                options: [{
-                    key: 'XS',
-                    value: 'XS',
-                    text: 'XS',
-                }, {
-                    key: 'Small',
-                    value: 'Small',
-                    text: 'Small',
-                }, {
-                    key: 'Medium',
-                    value: 'Medium',
-                    text: 'Medium',
-                }, {
-                    key: 'Large',
-                    value: 'Large',
-                    text: 'Large',
-                }, {
-                    key: 'XL',
-                    value: 'XL',
-                    text: 'XL',
-                }, {
-                    key: 'XXL',
-                    value: 'XXL',
-                    text: 'XXL',
-                }]
+                options: optionify(['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL'])
             };
         case "COLOR":
             return {
                 mapsTo: 'color',
                 options: ["#000000", "#ffffff"]
             };
+        case "STICKER_COLOR":
+            return {
+                mapsTo: 'sticker_color',
+                options: ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607d8b"],
+            };
+        case "STICKER_TYPE":
+            return {
+                mapsTo: 'sticker_type',
+                options: optionify(['Heat Transfer Vinyl', 'Standard Vinyl'])
+            };
         case "MATERIAL_MUG":
             return {
                 mapsTo: 'material_mug',
-                options: [{
-                    key: 'Ceramic',
-                    value: 'Ceramic',
-                    text: 'Ceramic'
-                }, {
-                    key: 'Matte',
-                    value: 'Matte',
-                    text: 'Matte'
-                }, {
-                    key: 'Porcelain',
-                    value: 'Porcelain',
-                    text: 'Porcelain'
-                }]
+                options: optionify(['Ceramic', 'Matte', 'Porcalean'])
             };
         case "STYLE":
             return {
@@ -308,23 +293,7 @@ export const getAttributeValues = (attributeName) => {
         case "MATERIAL_SHIRT":
             return {
                 mapsTo: 'material_shirt',
-                options: [{
-                    key: 'Cotton',
-                    value: 'Cotton',
-                    text: 'Cotton'
-                }, {
-                    key: 'Dryfit',
-                    value: 'Dryfit',
-                    text: 'Dryfit'
-                }, {
-                    key: 'Nylon',
-                    value: 'Nylon',
-                    text: 'Nylon'
-                }, {
-                    key: 'Polyester',
-                    value: 'Polyester',
-                    text: 'Polyester'
-                }]
+                options: optionify(['Cotton', 'Dryfit', 'Nylon', 'Polyester'])
             };
         default:
             return {
