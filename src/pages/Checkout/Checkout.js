@@ -40,6 +40,7 @@ class Checkout extends Component {
             activeStep: 0,
             steps: ['Review', 'Shipping', 'Checkout'],
             data: {}, // Address data from step two
+            shippingAddress: null, // The id of the address to ship to stored in the db
             addressErrors: {
                 city: false,
                 firstName: false,
@@ -49,10 +50,6 @@ class Checkout extends Component {
                 street: false,
             },
         };
-
-        const items = [{price: 999, quantity: 1 }, {price: 528, quantity: 2 }, {price: 172, quantity: 1 }, {price: 1099, quantity: 3}];
-        const total = items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price }), { price: 0, quantity: 0 });
-        console.log(total);
     }
 
 
@@ -109,6 +106,10 @@ class Checkout extends Component {
                 console.log('Errors found in address: ', addressErrors);
                 this.setState({ addressErrors });
                 return;
+            } else {
+                this.persistAddress().then(address => {
+                   this.setState({ shippingAddress: address.id });
+                });
             }
         }
 
@@ -167,7 +168,8 @@ class Checkout extends Component {
                     body: JSON.stringify(this.props.cart.items),
                 };
 
-                const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT), params);
+                console.log(this.state.shippingAddress);
+                const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT) + '/' + this.state.shippingAddress, params);
                 const { session_id } = await(response).json();
                 console.log("Stripe session ID: ", session_id);
                 const {error} = await stripe.redirectToCheckout({
