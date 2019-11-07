@@ -48,8 +48,14 @@ class Checkout extends Component {
                 zip: false,
                 street: false,
             },
-        }
+        };
+
+        const items = [{price: 999, quantity: 1 }, {price: 528, quantity: 2 }, {price: 172, quantity: 1 }, {price: 1099, quantity: 3}];
+        const total = items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price }), { price: 0, quantity: 0 });
+        console.log(total);
     }
+
+
 
     /**
      * Stores the users shipping address in the database
@@ -244,8 +250,7 @@ class Checkout extends Component {
                                     <span style={{ fontSize: 17 }}>Subtotal</span>
                                     <span className="ml-auto" style={{ fontSize: 17 }}>
                                         ${
-                                            // TODO this is wrong
-                                            (this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, })).price / 100).toFixed(2)
+                                            (this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, }), { price: 0, quantity: 0 }).price / 100).toFixed(2)
                                         }
                                     </span>
                                 </div>
