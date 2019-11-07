@@ -32,6 +32,7 @@ const mapDispatchToProps = dispatch => ({
     sku: {
       ...sku,
       name: product.name,
+      description: product.description,
       images: product.images,
     }
   })),

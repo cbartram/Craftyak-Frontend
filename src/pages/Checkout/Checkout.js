@@ -5,6 +5,7 @@ import {
     Button,
     Card
 } from "semantic-ui-react";
+import isNil from 'lodash/isNil';
 import { StepOne } from './stepper/StepOne';
 import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
@@ -14,7 +15,7 @@ import {CREATE_PAYMENT_ENDPOINT, PERSIST_ADDRESS_ENDPOINT, getRequestUrl} from "
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import StepTwo from "./stepper/StepTwo";
+import { StepTwo } from "./stepper/StepTwo";
 const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
 
 const mapStateToProps = (state) => ({
@@ -38,11 +39,23 @@ class Checkout extends Component {
             sessionId: null,
             activeStep: 0,
             steps: ['Review', 'Shipping', 'Checkout'],
-            data: {} // Address data from step two
+            data: {}, // Address data from step two
+            addressErrors: {
+                city: false,
+                firstName: false,
+                lastName: false,
+                state: false,
+                zip: false,
+                street: false,
+            },
         }
     }
 
-    async validateAddress() {
+    /**
+     * Stores the users shipping address in the database
+     * @returns {Promise<null|any>}
+     */
+    async persistAddress() {
         try {
             const params = {
                 method: 'POST',
@@ -56,10 +69,21 @@ class Checkout extends Component {
             };
 
             const response = await fetch(getRequestUrl(PERSIST_ADDRESS_ENDPOINT), params);
-            const d = await (response).json();
-            console.log("Response: ", d);
+            return await response.json();
         } catch(err) {
             console.log("Failed to validate address something went wrong in the network call: ", err);
+            return null;
+        }
+    }
+
+    validateAddress(data) {
+        return {
+            city: isNil(data.city) || data.city.length < 1,
+            state: isNil(data.state) || data.state.length < 1,
+            zip: !/^\d{5}(?:[-\s]\d{4})?$/.test(data.zip),
+            street: isNil(data.street) || data.street.length < 1,
+            firstName: isNil(data.firstName) || data.firstName.length < 1,
+            lastName: isNil(data.lastName) || data.lastName.length < 1
         }
     }
 
@@ -69,24 +93,33 @@ class Checkout extends Component {
      * active step
      */
     handleNext() {
-        this.setState((prevState) => {
-            // Users are submitting the form for their address validate it
-            if(prevState.activeStep === 1) {
-                this.validateAddress();
+        const { activeStep, data } = this.state;
+
+        // Users are submitting the form for their address validate it
+        if(activeStep === 1) {
+            const addressErrors = this.validateAddress(data);
+            // True if there are any errors in the map
+            if(Object.values(addressErrors).filter(Boolean).length > 0) {
+                console.log('Errors found in address: ', addressErrors);
+                this.setState({ addressErrors });
+                return;
             }
-            return {
-                activeStep: prevState.activeStep + 1
-            }
-        });
+        }
+
+        if(activeStep === 2) {
+            console.log("Creating stripe session");
+            this.createStripeSession();
+            return;
+        }
+
+        this.setState( (prevState) => ({ activeStep: prevState.activeStep + 1 }));
     };
 
     /**
      * Decrements the steppers active step
      */
     handleBack() {
-        this.setState((prevState) => ({
-            activeStep: prevState.activeStep - 1
-        }));
+        this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }));
     };
 
     /**
@@ -115,8 +148,7 @@ class Checkout extends Component {
      * to the server to interact with stripe.
      * @returns {Promise<void>}
      */
-    createStripeSession() {
-        this.setState({ loading: true }, async () => {
+    async createStripeSession() {
             try {
                 const params = {
                     method: 'POST',
@@ -126,7 +158,7 @@ class Checkout extends Component {
                         'Accept': 'application/json',
                         'x-api-key': 'api-key',
                     },
-                    body: JSON.stringify({ products: this.props.cart.items }),
+                    body: JSON.stringify(this.props.cart.items),
                 };
 
                 const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT), params);
@@ -142,10 +174,7 @@ class Checkout extends Component {
 
             } catch(err) {
                 console.log("[ERROR] Error creating new stripe session: ", err);
-            } finally {
-                this.setState({ loading: false });
             }
-        });
     }
 
     /**
@@ -165,15 +194,24 @@ class Checkout extends Component {
             case 0:
                 return (
                     <StepOne
+                        header="Your Cart"
                         items={this.props.cart.items}
                         onUpdateQuantity={(uuid, value) => this.props.updateQuantity(uuid, value)}
                         onRemove={(uuid) => this.props.removeAllFromCart(uuid)}
                     />
                 );
             case 1:
-                return <StepTwo onFieldUpdate={(value, field) => this.onFieldUpdate(value, field)} />;
+                return <StepTwo
+                        onFieldUpdate={(value, field) => this.onFieldUpdate(value, field)}
+                        errors={this.state.addressErrors}
+                    />;
             case 2:
-                return <h3>Step 3</h3>;
+                return <StepOne
+                             header="Review and Checkout"
+                             items={this.props.cart.items}
+                             onUpdateQuantity={(uuid, value) => this.props.updateQuantity(uuid, value)}
+                             onRemove={(uuid) => this.props.removeAllFromCart(uuid)}
+                        />;
             default:
                 return <h3>Unknown</h3>
         }
@@ -207,14 +245,14 @@ class Checkout extends Component {
                                     <span className="ml-auto" style={{ fontSize: 17 }}>
                                         ${
                                             // TODO this is wrong
-                                            this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, })).price
+                                            (this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, })).price / 100).toFixed(2)
                                         }
                                     </span>
                                 </div>
                             } />
                             <Card.Content>
                                 <div className="d-flex flex-column">
-                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} className="mb-2">
+                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} className="mb-2" disabled={this.state.activeStep >= this.state.steps.length}>
                                         {this.state.activeStep === this.state.steps.length - 1 ? 'Checkout' : 'Next'}
                                     </Button>
                                     <Button disabled={this.state.activeStep === 0} onClick={() => this.handleBack()}>

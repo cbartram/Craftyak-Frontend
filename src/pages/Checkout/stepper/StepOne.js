@@ -12,7 +12,7 @@ import times from "lodash/times";
 export const StepOne = (props) => {
     return (
         <div>
-            <Header as="h2" className="header-muted">Your Cart</Header>
+            <Header as="h2" className="header-muted">{ props.header }</Header>
             {
                 props.items.map(product => {
                     return (

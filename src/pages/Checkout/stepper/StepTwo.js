@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
     Form,
     Select
@@ -7,42 +7,67 @@ import {optionify} from "../../../util";
 import statesJson from '../../../data/states';
 const states = optionify(Object.values(statesJson));
 
-export default class StepTwo extends Component {
-    render() {
+export const StepTwo = (props) => {
         return (
             <div>
                 <h2>Shipping Details</h2>
                 <Form>
                     <Form.Field>
                         <label>First Name</label>
-                        <input placeholder='First Name' onChange={(e) => this.props.onFieldUpdate(e.target.value, 'firstName')} />
+                        <Form.Input
+                            placeholder='First Name'
+                            onChange={(e) => props.onFieldUpdate(e.target.value, 'firstName')}
+                            error={props.errors['firstName']}
+                        />
                     </Form.Field>
                     <Form.Field>
                         <label>Last Name</label>
-                        <input placeholder='Last Name' onChange={(e) => this.props.onFieldUpdate(e.target.value, 'lastName')}/>
+                        <Form.Input
+                            placeholder='Last Name'
+                            onChange={(e) => props.onFieldUpdate(e.target.value, 'lastName')}
+                            error={props.errors['lastName']}
+                        />
                     </Form.Field>
                     <Form.Field>
                         <label>Street</label>
-                        <input placeholder='Street' onChange={(e) => this.props.onFieldUpdate(e.target.value, 'street')}/>
+                        <Form.Input
+                            placeholder='Street'
+                            onChange={(e) => props.onFieldUpdate(e.target.value, 'street')}
+                            error={props.errors['street']}
+                        />
                     </Form.Field>
                     <Form.Field>
                         <label>Unit Number</label>
-                        <input placeholder='Unit Number' onChange={(e) => this.props.onFieldUpdate(e.target.value, 'unitNumber')}/>
+                        <Form.Input
+                            placeholder='Unit Number'
+                            onChange={(e) => props.onFieldUpdate(e.target.value, 'unitNumber')}
+                        />
                     </Form.Field>
                     <Form.Field>
                         <label>City</label>
-                        <input placeholder='City' onChange={(e) => this.props.onFieldUpdate(e.target.value, 'city')}/>
+                        <Form.Input
+                            placeholder='City'
+                            onChange={(e) => props.onFieldUpdate(e.target.value, 'city')}
+                            error={props.errors['city']}
+                        />
                     </Form.Field>
                     <Form.Field>
                         <label>State</label>
-                        <Select options={states} onChange={(e, data) => this.props.onFieldUpdate(data.value, 'state')}/>
+                        <Select
+                            options={states}
+                            onChange={(e, data) => props.onFieldUpdate(data.value, 'state')}
+                            error={props.errors['state']}
+                        />
                     </Form.Field>
                     <Form.Field>
                         <label>Zip</label>
-                        <input placeholder='Zip Code' onChange={(e) => this.props.onFieldUpdate(e.target.value, 'zip')}/>
+                        <Form.Input
+                            placeholder='Zip Code'
+                            onChange={(e) => props.onFieldUpdate(e.target.value, 'zip')}
+                            error={props.errors['zip']}
+                        />
                     </Form.Field>
                 </Form>
             </div>
-        )
-    }
-}
+        );
+};
