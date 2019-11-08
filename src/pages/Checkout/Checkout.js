@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
     Header,
     Button,
-    Card
+    Card, Icon
 } from "semantic-ui-react";
 import isNil from 'lodash/isNil';
 import { StepOne } from './stepper/StepOne';
@@ -16,6 +16,8 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { StepTwo } from "./stepper/StepTwo";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import Snackbar from "@material-ui/core/Snackbar";
 const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
 
 const mapStateToProps = (state) => ({
@@ -38,6 +40,9 @@ class Checkout extends Component {
         this.state = {
             sessionId: null,
             activeStep: 0,
+            loading: false,
+            showErrorMessage: false,
+            errorMessage: '',
             steps: ['Review', 'Shipping', 'Checkout'],
             data: {}, // Address data from step two
             shippingAddress: null, // The id of the address to ship to stored in the db
@@ -52,33 +57,44 @@ class Checkout extends Component {
         };
     }
 
-
-
     /**
      * Stores the users shipping address in the database
      * @returns {Promise<null|any>}
      */
-    async persistAddress() {
-        try {
-            const params = {
-                method: 'POST',
-                headers: {
-                    Authorization: 'foo',
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'x-api-key': 'api-key',
-                },
-                body: JSON.stringify({ ...this.state.data }),
-            };
+    persistAddress() {
+        this.setState({ loading: true }, async () => {
+            try {
+                const params = {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'foo',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'x-api-key': 'api-key',
+                    },
+                    body: JSON.stringify({ ...this.state.data }),
+                };
 
-            const response = await fetch(getRequestUrl(PERSIST_ADDRESS_ENDPOINT), params);
-            return await response.json();
-        } catch(err) {
-            console.log("Failed to validate address something went wrong in the network call: ", err);
-            return null;
-        }
+                const response = await fetch(getRequestUrl(PERSIST_ADDRESS_ENDPOINT), params);
+                const data = await response.json();
+                this.setState({ loading: false, shippingAddress: data.id });
+            } catch(err) {
+                console.log("Failed to persist address something went wrong in the network call: ", err);
+                this.setState({
+                    loading: false,
+                    showErrorMessage: true,
+                    errorMessage: 'There was an issue saving your address in our database. Please refresh the page and try again.'
+                });
+                return null;
+            }
+        });
     }
 
+    /**
+     * Validates that a shipping address contains the proper information
+     * @param data Object shipping address data
+     * @returns {{zip: boolean, firstName: boolean, lastName: boolean, city: boolean, street: boolean, state: boolean}}
+     */
     validateAddress(data) {
         return {
             city: isNil(data.city) || data.city.length < 1,
@@ -107,9 +123,7 @@ class Checkout extends Component {
                 this.setState({ addressErrors });
                 return;
             } else {
-                this.persistAddress().then(address => {
-                   this.setState({ shippingAddress: address.id });
-                });
+                this.persistAddress();
             }
         }
 
@@ -155,7 +169,8 @@ class Checkout extends Component {
      * to the server to interact with stripe.
      * @returns {Promise<void>}
      */
-    async createStripeSession() {
+    createStripeSession() {
+        this.setState({ loading: true }, async () => {
             try {
                 const params = {
                     method: 'POST',
@@ -168,21 +183,23 @@ class Checkout extends Component {
                     body: JSON.stringify(this.props.cart.items),
                 };
 
-                console.log(this.state.shippingAddress);
                 const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT) + '/' + this.state.shippingAddress, params);
                 const { session_id } = await(response).json();
-                console.log("Stripe session ID: ", session_id);
                 const {error} = await stripe.redirectToCheckout({
                     sessionId: session_id,
                 });
 
                 if(error) {
                     console.log("Error redirecting user to stripe checkout page: ", error);
+                    this.setState({ loading: false, showErrorMessage: true, errorMessage: 'Something went wrong redirecting you to the checkout page. Refresh the page and try again.'})
+                } else {
+                    this.setState({loading: false});
                 }
-
             } catch(err) {
+                this.setState({ loading: false, showErrorMessage: true, errorMessage: 'Something went wrong creating a new checkout session for you. Please refresh the page and try again' });
                 console.log("[ERROR] Error creating new stripe session: ", err);
             }
+        });
     }
 
     /**
@@ -230,6 +247,25 @@ class Checkout extends Component {
             return this.renderEmptyCart();
         return (
             <div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.showErrorMessage}
+                    autoHideDuration={6000}
+                    onClose={() => this.setState({ showErrorMessage: false, errorMessage: '' })}
+                >
+                    <SnackbarContent
+                        message={
+                            <span>
+                     <Icon name="warning" />
+                        { this.state.errorMessage }
+                    </span>
+                        }
+                        action={<Icon name="cancel" onClick={() => this.setState({ showErrorMessage: false, errorMessage: '' })} />}
+                    />
+                </Snackbar>
                 <div className="row page-bg-gray">
                     <div className="col-md-6 ml-auto mr-auto">
                         <Stepper activeStep={this.state.activeStep} alternativeLabel>
@@ -259,7 +295,7 @@ class Checkout extends Component {
                             } />
                             <Card.Content>
                                 <div className="d-flex flex-column">
-                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} className="mb-2" disabled={this.state.activeStep >= this.state.steps.length}>
+                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} loading={this.state.loading} className="mb-2" disabled={this.state.activeStep >= this.state.steps.length}>
                                         {this.state.activeStep === this.state.steps.length - 1 ? 'Checkout' : 'Next'}
                                     </Button>
                                     <Button disabled={this.state.activeStep === 0} onClick={() => this.handleBack()}>
