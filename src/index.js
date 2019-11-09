@@ -11,9 +11,18 @@ import {ApolloProvider} from "react-apollo";
 import rootReducer from './reducers/rootReducer';
 import Router from './components/Router/Router'
 import { dispatchProcessMiddleware, dispatchProcess } from './util';
-import {DEV_URL, IS_PROD, PROD_URL, INITIAL_STATE, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE} from './constants'
+import {
+    DEV_URL,
+    IS_PROD,
+    PROD_URL,
+    INITIAL_STATE,
+    GET_PRODUCTS_SUCCESS,
+    GET_PRODUCTS_FAILURE,
+    OAUTH_TOKEN_SUCCESS,
+    OAUTH_TOKEN_FAILURE
+} from './constants'
 import * as serviceWorker from './serviceWorker';
-import {getProducts} from "./actions/actions";
+import {getOAuthToken, getProducts} from "./actions/actions";
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
 
@@ -46,6 +55,7 @@ const client = new ApolloClient({
  */
 const render = async () => {
     try {
+        await dispatchProcess(getOAuthToken(), OAUTH_TOKEN_SUCCESS, OAUTH_TOKEN_FAILURE);
         await dispatchProcess(getProducts(), GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE);
         ReactDOM.render(
             <ApolloProvider client={client}>

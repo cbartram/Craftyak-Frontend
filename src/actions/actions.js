@@ -2,6 +2,7 @@
  * This file defines actions which trigger switch statements in the reducer
  */
 import * as constants from '../constants';
+import auth0 from 'auth0-js';
 import { get, post } from '../util';
 import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
@@ -9,6 +10,11 @@ import {UPDATE_SORT_OPTIONS} from "../constants";
 import {FILTER_PRODUCTS} from "../constants";
 import {REMOVE_ALL_FROM_CART} from "../constants";
 import {UPDATE_QUANTITY} from "../constants";
+import {REQUEST_OAUTH_TOKEN} from "../constants";
+import {OAUTH_ENDPOINT} from "../constants";
+import {CLIENT_ID} from "../constants";
+import {CLIENT_SECRET} from "../constants";
+import {OAUTH_TOKEN_SUCCESS} from "../constants";
 
 /**
  * Sends a user's current video information (such as duration completed, started watching etc.) to
@@ -17,6 +23,29 @@ import {UPDATE_QUANTITY} from "../constants";
  */
 export const getProducts = () => async (dispatch, getState) => {
     await get(constants.GET_ALL_PRODUCTS_ENDPOINT, constants.GET_PRODUCTS_REQUEST, constants.GET_PRODUCTS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState, false);
+};
+
+export const getOAuthToken = () => async (dispatch, getState) => {
+    const params = {
+        grant_type: 'client_credentials',
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        audience: 'https://quickstarts/api'
+    };
+
+    const searchParams = Object.keys(params)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+        .join('&');
+
+   const body = await (await fetch(OAUTH_ENDPOINT, {
+       method: 'POST',
+       headers: {
+           'Content-Type': 'application/x-www-form-urlencoded'
+       },
+       body: searchParams
+   })).json();
+
+   dispatch({ type: OAUTH_TOKEN_SUCCESS, payload: body });
 };
 
 /**

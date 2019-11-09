@@ -43,8 +43,9 @@ export const PROD_URL = 'https://2147bwmah5.execute-api.us-east-1.amazonaws.com/
 export const DEV_URL = 'http://localhost:8080';
 
 // Configuration Params
-export const API_KEY = 'pgS8gGvkv53xFg4BdgECn38C4CDNZXKj8EqFtQdW';
-export const PROD_API_KEY = 'mNer7Typlc9npqrkThXZ08xAIWoBXLyG2NEfHDd2';
+export const OAUTH_ENDPOINT = 'https://craftyyak.auth0.com/oauth/token';
+export const CLIENT_ID = 'Lg7HKqr7isCTDLm7Bcc0AAsjHKl7vmSV';
+export const CLIENT_SECRET = ''; // TODO no no
 
 // Redux Action/Reducer Constants
 export const GET_PRODUCTS_REQUEST = 'GET_PRODUCTS_REQUEST';
@@ -62,3 +63,6 @@ export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const REMOVE_ALL_FROM_CART = 'REMOVE_ALL_FROM_CART';
 export const UPDATE_SORT_OPTIONS = 'UPDATE_SORT_OPTIONS';
 export const FILTER_PRODUCTS = 'FILTER_PRODUCTS';
+export const REQUEST_OAUTH_TOKEN = 'REQUEST_OAUTH_TOKEN';
+export const OAUTH_TOKEN_SUCCESS = 'OAUTH_TOKEN_SUCCESS';
+export const OAUTH_TOKEN_FAILURE = 'OAUTH_TOKEN_FAILURE';
