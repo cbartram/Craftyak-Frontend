@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import map from 'lodash/map';
+import times from 'lodash/times';
 import { withRouter } from 'react-router-dom';
 import withContainer from "./components/withContainer";
 import {
@@ -80,44 +81,45 @@ class App extends Component {
      * @param loading
      * @returns {Array}
      */
-    renderCards(loading = this.props.products.isFetching) {
-        return map(this.props.products.items || [{}, {}, {}, {}, {}], product => (
-            <Card key={product.id} onClick={() => this.props.history.push(`/product/${product.metadata.slug}`)} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
-                {
-                    loading ?
-                        <Placeholder>
-                            <Placeholder.Image square />
-                        </Placeholder>
-                        : <Image src={product.images[0]} height="262" width="262" />
-                }
-                {
-                    loading ?
-                        <Card.Content>
-                            <Placeholder>
-                                <Placeholder.Header>
-                                    <Placeholder.Line length='very short' />
-                                    <Placeholder.Line length='long' />
-                                    <Placeholder.Line length='long' />
-                                </Placeholder.Header>
-                                <Placeholder.Paragraph>
-                                    <Placeholder.Line length='short' />
-                                    <Placeholder.Line length='medium' />
-                                </Placeholder.Paragraph>
-                            </Placeholder>
-                        </Card.Content>
-                        :
-                        <Card.Content>
-                            <Card.Header>{product.name}</Card.Header>
-                            <Card.Meta>
-                                <span className='date'>${product.metadata.price}</span>
-                            </Card.Meta>
-                            <Card.Description>
-                                {product.caption}
-                            </Card.Description>
-                        </Card.Content>
-                }
-            </Card>
-        ));
+    renderCards(loading = this.props.products.isFetching || this.props.products.items.length === 0) {
+        if(loading)
+            return times(6, (i) => {
+               return (
+                   <Card key={i} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
+                       <Placeholder>
+                           <Placeholder.Image square />
+                       </Placeholder>
+                       <Card.Content>
+                           <Placeholder>
+                               <Placeholder.Header>
+                                   <Placeholder.Line length='very short' />
+                                   <Placeholder.Line length='long' />
+                                   <Placeholder.Line length='long' />
+                               </Placeholder.Header>
+                               <Placeholder.Paragraph>
+                                   <Placeholder.Line length='short' />
+                                   <Placeholder.Line length='medium' />
+                               </Placeholder.Paragraph>
+                           </Placeholder>
+                       </Card.Content>
+                   </Card>
+               )
+            });
+        else
+            return map(this.props.products.items, product => (
+                <Card key={product.id} onClick={() => this.props.history.push(`/product/${product.metadata.slug}`)} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
+                     <Image src={product.images[0]} height="262" width="262" />
+                    <Card.Content>
+                        <Card.Header>{product.name}</Card.Header>
+                        <Card.Meta>
+                            <span className='date'>${product.metadata.price}</span>
+                        </Card.Meta>
+                        <Card.Description>
+                            {product.caption}
+                        </Card.Description>
+                    </Card.Content>
+                </Card>
+            ));
     }
 
     /**

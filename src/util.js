@@ -112,10 +112,9 @@ export const get = async (path, requestType, successType, failureType, dispatch,
         const params = {
             method: 'GET',
             headers: {
-                Authorization: 'foo',
+                Authorization: `Bearer ${getState().auth.access_token}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'x-api-key': 'api-key',
             },
         };
 
@@ -181,10 +180,9 @@ export const post = async (body, path, requestType, successType, failureType, di
         const params = {
             method: 'POST',
             headers: {
-                Authorization: 'foo',
+                Authorization: `Bearer ${getState().auth.access_token}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'x-api-key': 'api-key',
             },
             body: JSON.stringify(body),
         };

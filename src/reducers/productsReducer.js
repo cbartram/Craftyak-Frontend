@@ -39,7 +39,7 @@ export default (state = { ...DEFAULT_STATE }, action) => {
             return {
                 ...state,
                 error: action.payload,
-                isFetching: true,
+                isFetching: false,
                 items: [],
                 originalItems: [],
             };

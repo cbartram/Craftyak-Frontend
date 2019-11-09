@@ -69,7 +69,16 @@ const render = async () => {
             </ApolloProvider>, document.getElementById('root'));
     } catch(error) {
         console.log("[Error] There was an issue loading the App: ", error);
-        // TODO Render the error page
+        ReactDOM.render(
+            <ApolloProvider client={client}>
+                <Provider store={store}>
+                    <StripeProvider apiKey="pk_test_AIs6RYV3qrxG6baDpohxn1L7">
+                        <Elements>
+                            <Router/>
+                        </Elements>
+                    </StripeProvider>
+                </Provider>
+            </ApolloProvider>, document.getElementById('root'));
     }
 };
 
