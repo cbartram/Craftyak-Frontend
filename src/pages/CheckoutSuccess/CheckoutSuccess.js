@@ -11,12 +11,12 @@ class CheckoutSuccess extends Component {
 
     this.state = {
       items: [],
+      sessionId: null,
     }
   }
 
   componentDidMount() {
     const sessionId = new URLSearchParams(document.location.search).get("session_id");
-    console.log(sessionId);
     const params = {
       method: 'GET',
       headers: {
@@ -27,11 +27,11 @@ class CheckoutSuccess extends Component {
       },
     };
 
-    const response = fetch(getRequestUrl(GET_SESSION_ENDPOINT) + sessionId, params)
-        .then(res => res.json())
-        .then(res => this.setState({ items: res.display_items })).catch(err => {
-          console.log("There was an error retrieving the stripe session: ", err);
-        });
+    fetch(getRequestUrl(GET_SESSION_ENDPOINT) + sessionId, params)
+      .then(res => res.json())
+      .then(res => this.setState({ items: res.display_items, sessionId })).catch(err => {
+        console.log("There was an error retrieving the stripe session: ", err);
+      });
   }
 
   render() {
@@ -41,7 +41,7 @@ class CheckoutSuccess extends Component {
               <div className="col-md-5 ml-auto mr-auto">
                 <div className="my-4">
                   <Header as="h2" className="header-muted">Your Order</Header>
-                  <p className="common-body-text">Your order has been created successfully. Your tracking number is
+                  <p className="common-body-text">Your order has been created successfully with the order number:</p><strong>{this.state.sessionId}</strong>. <p>Your tracking number is
                     XXXX and your order has been shipped with UPS. To track or manager your order please use this link.</p>
                   <Menu>
                     <Menu.Item position="left">
