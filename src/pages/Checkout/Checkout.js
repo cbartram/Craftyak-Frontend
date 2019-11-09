@@ -21,7 +21,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
 
 const mapStateToProps = (state) => ({
-    cart: state.cart
+    cart: state.cart,
+    auth: state.auth,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -64,13 +65,13 @@ class Checkout extends Component {
     persistAddress() {
         this.setState({ loading: true }, async () => {
             try {
+                console.log(this.props.auth);
                 const params = {
                     method: 'POST',
                     headers: {
-                        Authorization: 'foo',
+                        Authorization: `Bearer ${this.props.auth.access_token}`,
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'x-api-key': 'api-key',
                     },
                     body: JSON.stringify({ ...this.state.data }),
                 };
@@ -78,6 +79,7 @@ class Checkout extends Component {
                 const response = await fetch(getRequestUrl(PERSIST_ADDRESS_ENDPOINT), params);
                 const data = await response.json();
                 this.setState({ loading: false, shippingAddress: data.id });
+                return data;
             } catch(err) {
                 console.log("Failed to persist address something went wrong in the network call: ", err);
                 this.setState({
@@ -123,7 +125,7 @@ class Checkout extends Component {
                 this.setState({ addressErrors });
                 return;
             } else {
-                this.persistAddress();
+               this.persistAddress();
             }
         }
 
@@ -175,10 +177,9 @@ class Checkout extends Component {
                 const params = {
                     method: 'POST',
                     headers: {
-                        Authorization: 'foo',
+                        Authorization: `Bearer ${this.props.auth.access_token}`,
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'x-api-key': 'api-key',
                     },
                     body: JSON.stringify(this.props.cart.items),
                 };
@@ -295,7 +296,7 @@ class Checkout extends Component {
                             } />
                             <Card.Content>
                                 <div className="d-flex flex-column">
-                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} loading={this.state.loading} className="mb-2" disabled={this.state.activeStep >= this.state.steps.length}>
+                                    <Button primary onClick={(e, f) => this.handleNext(e, f)} loading={this.state.loading} className="mb-2" disabled={this.state.activeStep >= this.state.steps.length || this.state.showErrorMessage}>
                                         {this.state.activeStep === this.state.steps.length - 1 ? 'Checkout' : 'Next'}
                                     </Button>
                                     <Button disabled={this.state.activeStep === 0} onClick={() => this.handleBack()}>

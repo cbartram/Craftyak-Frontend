@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import withContainer from "../../components/withContainer";
 import './CheckoutSuccess.css';
-import {Button, Header, Image, Menu} from "semantic-ui-react";
+import {Header, Image, Menu} from "semantic-ui-react";
 import {GET_SESSION_ENDPOINT, getRequestUrl} from "../../constants";
 import {Link} from "react-router-dom";
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
 
 class CheckoutSuccess extends Component {
   constructor(props) {
@@ -20,10 +25,9 @@ class CheckoutSuccess extends Component {
     const params = {
       method: 'GET',
       headers: {
-        Authorization: 'foo',
+        Authorization: `Bearer ${this.props.auth.access_token}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'x-api-key': 'api-key',
       },
     };
 
@@ -60,9 +64,9 @@ class CheckoutSuccess extends Component {
                     </Menu.Item>
                   </Menu>
                   {
-                    this.state.items.map(product => {
+                    this.state.items.map((product, i) => {
                       return (
-                          <Menu key={product.id}>
+                          <Menu key={`${product.id}-${i}`}>
                             <Menu.Item position="left">
                               <Image src={product.custom.images[0]} heigh={60} width={60}/>
                             </Menu.Item>
@@ -89,4 +93,4 @@ class CheckoutSuccess extends Component {
   }
 }
 
-export default withContainer(CheckoutSuccess);
+export default withContainer(connect(mapStateToProps)(CheckoutSuccess));
