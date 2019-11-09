@@ -38,14 +38,27 @@ class CheckoutSuccess extends Component {
       return (
           <div>
             <div className="row page-bg-gray">
-              <div className="col-md-4 ml-auto mr-auto">
-                <h2>Order Created Successfully</h2>
-              </div>
-            </div>
-            <div className="row page-bg-gray">
-              <div className="col-md-8 ml-auto mr-auto">
-                <div>
+              <div className="col-md-5 ml-auto mr-auto">
+                <div className="my-4">
                   <Header as="h2" className="header-muted">Your Order</Header>
+                  <p className="common-body-text">Your order has been created successfully. Your tracking number is
+                    XXXX and your order has been shipped with UPS. To track or manager your order please use this link.</p>
+                  <Menu>
+                    <Menu.Item position="left">
+                      <b>Image</b>
+                    </Menu.Item>
+                    <Menu.Item position="left">
+                      <b>Item Name & Quantity</b>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <b>Price per Item</b>
+                    </Menu.Item>
+                    <Menu.Item position="right">
+                      <div className="d-flex flex-column">
+                        <b>Actions</b>
+                      </div>
+                    </Menu.Item>
+                  </Menu>
                   {
                     this.state.items.map(product => {
                       return (
