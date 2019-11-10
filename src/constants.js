@@ -36,16 +36,16 @@ export const CREATE_ORDER_ENDPOINT = '/api/v1/orders/create'; // Checkout endpoi
 export const CREATE_PAYMENT_ENDPOINT = '/api/v1/payments/create';
 export const GET_SESSION_ENDPOINT = '/api/v1/payments/session/';
 export const PERSIST_ADDRESS_ENDPOINT = '/api/v1/address/create';
+export const OAUTH_ENDPOINT = '/oauth/token';
 
 // Prod Params
-export const PROD_URL = 'https://2147bwmah5.execute-api.us-east-1.amazonaws.com/prod';
+export const PROD_URL = 'https://crafty-yak.herokuapp.com';
 // Dev Params
 export const DEV_URL = 'http://localhost:8080';
 
 // Configuration Params
-export const OAUTH_ENDPOINT = 'https://craftyyak.auth0.com/oauth/token';
-export const CLIENT_ID = 'Lg7HKqr7isCTDLm7Bcc0AAsjHKl7vmSV';
-export const CLIENT_SECRET = ''; // TODO no no
+export const CLIENT_ID = 'CEdVxfcdxPZIqt1HISBTynP00i2TedzRl';
+export const CLIENT_SECRET = 'Vew00SLgFsg4w14Dv22UxPZIqt1dVxfcd';
 
 // Redux Action/Reducer Constants
 export const GET_PRODUCTS_REQUEST = 'GET_PRODUCTS_REQUEST';

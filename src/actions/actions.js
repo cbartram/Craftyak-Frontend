@@ -15,6 +15,7 @@ import {OAUTH_ENDPOINT} from "../constants";
 import {CLIENT_ID} from "../constants";
 import {CLIENT_SECRET} from "../constants";
 import {OAUTH_TOKEN_SUCCESS} from "../constants";
+import {getRequestUrl} from "../constants";
 
 /**
  * Sends a user's current video information (such as duration completed, started watching etc.) to
@@ -26,26 +27,16 @@ export const getProducts = () => async (dispatch, getState) => {
 };
 
 export const getOAuthToken = () => async (dispatch) => {
-    const params = {
-        grant_type: 'client_credentials',
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-        audience: 'https://quickstarts/api'
-    };
+    const response = await (await fetch(getRequestUrl(OAUTH_ENDPOINT), {
+        method: 'GET',
+        headers: {
+            Authorization: `Basic ${btoa(`${CLIENT_ID}:${CLIENT_SECRET}`)}`
+        }
+    })).json();
 
-    const searchParams = Object.keys(params)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
-        .join('&');
+    console.log("get access_token response: ", response);
 
-   const body = await (await fetch(OAUTH_ENDPOINT, {
-       method: 'POST',
-       headers: {
-           'Content-Type': 'application/x-www-form-urlencoded'
-       },
-       body: searchParams
-   })).json();
-
-   dispatch({ type: OAUTH_TOKEN_SUCCESS, payload: body });
+   dispatch({ type: OAUTH_TOKEN_SUCCESS, payload: response });
 };
 
 /**
