@@ -19,7 +19,7 @@ import {
     GET_PRODUCTS_SUCCESS,
     GET_PRODUCTS_FAILURE,
     OAUTH_TOKEN_SUCCESS,
-    OAUTH_TOKEN_FAILURE
+    OAUTH_TOKEN_FAILURE, STRIPE_LIVE_KEY, STRIPE_TEST_KEY
 } from './constants'
 import * as serviceWorker from './serviceWorker';
 import {getOAuthToken, getProducts} from "./actions/actions";
@@ -60,7 +60,7 @@ const render = async () => {
         ReactDOM.render(
             <ApolloProvider client={client}>
                 <Provider store={store}>
-                    <StripeProvider apiKey="pk_test_AIs6RYV3qrxG6baDpohxn1L7">
+                    <StripeProvider apiKey={IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY}>
                         <Elements>
                             <Router/>
                         </Elements>
