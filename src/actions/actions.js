@@ -2,7 +2,6 @@
  * This file defines actions which trigger switch statements in the reducer
  */
 import * as constants from '../constants';
-import auth0 from 'auth0-js';
 import { get, post } from '../util';
 import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
@@ -10,7 +9,6 @@ import {UPDATE_SORT_OPTIONS} from "../constants";
 import {FILTER_PRODUCTS} from "../constants";
 import {REMOVE_ALL_FROM_CART} from "../constants";
 import {UPDATE_QUANTITY} from "../constants";
-import {REQUEST_OAUTH_TOKEN} from "../constants";
 import {OAUTH_ENDPOINT} from "../constants";
 import {CLIENT_ID} from "../constants";
 import {CLIENT_SECRET} from "../constants";
@@ -26,6 +24,11 @@ export const getProducts = () => async (dispatch, getState) => {
     await get(constants.GET_ALL_PRODUCTS_ENDPOINT, constants.GET_PRODUCTS_REQUEST, constants.GET_PRODUCTS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState, false);
 };
 
+/**
+ * Retrieves an oauth token from Auth0 using the backend Spring
+ * server as a proxy
+ * @returns {Function}
+ */
 export const getOAuthToken = () => async (dispatch) => {
     const response = await (await fetch(getRequestUrl(OAUTH_ENDPOINT), {
         method: 'GET',
@@ -33,9 +36,6 @@ export const getOAuthToken = () => async (dispatch) => {
             Authorization: `Basic ${btoa(`${CLIENT_ID}:${CLIENT_SECRET}`)}`
         }
     })).json();
-
-    console.log("get access_token response: ", response);
-
    dispatch({ type: OAUTH_TOKEN_SUCCESS, payload: response });
 };
 

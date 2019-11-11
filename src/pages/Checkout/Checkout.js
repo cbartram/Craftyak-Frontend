@@ -16,7 +16,8 @@ import {
     PERSIST_ADDRESS_ENDPOINT,
     getRequestUrl,
     IS_PROD,
-    STRIPE_LIVE_KEY, STRIPE_TEST_KEY
+    STRIPE_LIVE_KEY,
+    STRIPE_TEST_KEY
 } from "../../constants";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -24,7 +25,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import { StepTwo } from "./stepper/StepTwo";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import Snackbar from "@material-ui/core/Snackbar";
-const stripe = window.Stripe(IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY);
+const stripe = window.Stripe(STRIPE_TEST_KEY); // TODO update to IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
@@ -71,7 +72,6 @@ class Checkout extends Component {
     persistAddress() {
         this.setState({ loading: true }, async () => {
             try {
-                console.log(this.props.auth);
                 const params = {
                     method: 'POST',
                     headers: {
@@ -194,6 +194,7 @@ class Checkout extends Component {
                 const { session_id } = await(response).json();
                 const {error} = await stripe.redirectToCheckout({
                     sessionId: session_id,
+                    clientReferenceId: this.state.shippingAddress
                 });
 
                 if(error) {

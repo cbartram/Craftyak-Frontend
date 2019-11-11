@@ -60,7 +60,8 @@ const render = async () => {
         ReactDOM.render(
             <ApolloProvider client={client}>
                 <Provider store={store}>
-                    <StripeProvider apiKey={IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY}>
+                     /* TODO Change this to IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY  */
+                    <StripeProvider apiKey={STRIPE_TEST_KEY}>
                         <Elements>
                             <Router/>
                         </Elements>
@@ -82,7 +83,9 @@ const render = async () => {
     }
 };
 
-render().then(() => console.log('App Loaded'));
+render().then(() => {
+    console.log(IS_PROD ? 'Using stripe live key': 'Using stripe test key')
+});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

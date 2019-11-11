@@ -44,7 +44,7 @@ export const PROD_URL = 'https://crafty-yak.herokuapp.com';
 export const DEV_URL = 'http://localhost:8080';
 
 // Configuration Params
-export const STRIPE_TEST_KEY = 'pk_test_AIs6RYV3qrxG6baDpohxn1L7';
+export const STRIPE_TEST_KEY = 'pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN';
 export const STRIPE_LIVE_KEY = 'pk_live_aL4kCEdVxfcdxPZIqtQpsVew00SLgFsg4w';
 export const CLIENT_ID = 'CEdVxfcdxPZIqt1HISBTynP00i2TedzRl';
 export const CLIENT_SECRET = 'Vew00SLgFsg4w14Dv22UxPZIqt1dVxfcd';
