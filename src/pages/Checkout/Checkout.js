@@ -11,14 +11,20 @@ import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
 import { removeAllFromCart, updateQuantity} from "../../actions/actions";
-import {CREATE_PAYMENT_ENDPOINT, PERSIST_ADDRESS_ENDPOINT, getRequestUrl} from "../../constants";
+import {
+    CREATE_PAYMENT_ENDPOINT,
+    PERSIST_ADDRESS_ENDPOINT,
+    getRequestUrl,
+    IS_PROD,
+    STRIPE_LIVE_KEY, STRIPE_TEST_KEY
+} from "../../constants";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { StepTwo } from "./stepper/StepTwo";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import Snackbar from "@material-ui/core/Snackbar";
-const stripe = window.Stripe('pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN');
+const stripe = window.Stripe(IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY);
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
