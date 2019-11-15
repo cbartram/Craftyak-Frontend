@@ -57,10 +57,10 @@ const render = async () => {
     try {
         await dispatchProcess(getOAuthToken(), OAUTH_TOKEN_SUCCESS, OAUTH_TOKEN_FAILURE);
         await dispatchProcess(getProducts(), GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE);
+         // TODO Change this to IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY
         ReactDOM.render(
             <ApolloProvider client={client}>
                 <Provider store={store}>
-                     /* TODO Change this to IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY  */
                     <StripeProvider apiKey={STRIPE_TEST_KEY}>
                         <Elements>
                             <Router/>

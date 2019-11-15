@@ -33,7 +33,12 @@ class CheckoutSuccess extends Component {
 
     fetch(getRequestUrl(GET_SESSION_ENDPOINT) + sessionId, params)
       .then(res => res.json())
-      .then(res => this.setState({ items: res.display_items, sessionId })).catch(err => {
+      .then(res => {
+        this.setState({
+          items: res.display_items.filter(item => item.custom.name !== 'Sales Tax' && item.custom.name !== 'Shipping'),
+          sessionId
+        })
+      }).catch(err => {
         console.log("There was an error retrieving the stripe session: ", err);
       });
   }
@@ -45,8 +50,10 @@ class CheckoutSuccess extends Component {
               <div className="col-md-5 ml-auto mr-auto">
                 <div className="my-4">
                   <Header as="h2" className="header-muted">Your Order</Header>
-                  <p className="common-body-text">Your order has been created successfully with the order number:</p><strong>{this.state.sessionId}</strong>. <p>Your tracking number is
-                    XXXX and your order has been shipped with UPS. To track or manager your order please use this link.</p>
+                  <p className="common-body-text">Your order has been created successfully and we are working to get it processed
+                    and shipped shortly. Your order ID is: <b>{this.state.sessionId}</b>. Keep this for your records
+                    so we can locate your order in the future.</p>
+                  <p>You should receive an email with your tracking number and shipping details within 15 minutes!</p>
                   <Menu>
                     <Menu.Item position="left">
                       <b>Image</b>

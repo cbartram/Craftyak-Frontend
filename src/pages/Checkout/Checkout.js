@@ -7,6 +7,7 @@ import {
 } from "semantic-ui-react";
 import isNil from 'lodash/isNil';
 import { StepOne } from './stepper/StepOne';
+import { StepThree } from './stepper/StepThree';
 import { Link } from 'react-router-dom';
 import withContainer from "../../components/withContainer";
 import './Checkout.css';
@@ -53,7 +54,14 @@ class Checkout extends Component {
             errorMessage: '',
             steps: ['Review', 'Shipping', 'Checkout'],
             data: {}, // Address data from step two
-            shippingAddress: null, // The id of the address to ship to stored in the db
+            shipping: {
+                shipmentId: null,
+                addressId: null,
+                orderId: null,
+                tax: null,
+                total: null,
+                shippingCost: null,
+            },
             addressErrors: {
                 city: false,
                 firstName: false,
@@ -66,7 +74,8 @@ class Checkout extends Component {
     }
 
     /**
-     * Stores the users shipping address in the database
+     * Stores the users shipping address in the database and
+     * calculates tax and shipping information with EasyPost
      * @returns {Promise<null|any>}
      */
     persistAddress() {
@@ -79,12 +88,23 @@ class Checkout extends Component {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ ...this.state.data }),
+                    body: JSON.stringify({
+                        address: this.state.data,
+                        skus: this.props.cart.items.map(item => item.id),
+                        quantities: this.props.cart.items.map(item => item.quantity)
+                    }),
                 };
 
                 const response = await fetch(getRequestUrl(PERSIST_ADDRESS_ENDPOINT), params);
                 const data = await response.json();
-                this.setState({ loading: false, shippingAddress: data.id });
+                this.setState({
+                    loading: false,
+                    shipping: {
+                        ...data
+                    }
+                });
+
+                console.log("Address Response: ", data);
                 return data;
             } catch(err) {
                 console.log("Failed to persist address something went wrong in the network call: ", err);
@@ -187,14 +207,13 @@ class Checkout extends Component {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify(this.props.cart.items),
+                    body: JSON.stringify(this.state.shipping),
                 };
 
-                const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT) + '/' + this.state.shippingAddress, params);
+                const response = await fetch(getRequestUrl(CREATE_PAYMENT_ENDPOINT), params);
                 const { session_id } = await(response).json();
                 const {error} = await stripe.redirectToCheckout({
                     sessionId: session_id,
-                    clientReferenceId: this.state.shippingAddress
                 });
 
                 if(error) {
@@ -239,7 +258,7 @@ class Checkout extends Component {
                         errors={this.state.addressErrors}
                     />;
             case 2:
-                return <StepOne
+                return <StepThree
                              header="Review and Checkout"
                              items={this.props.cart.items}
                              onUpdateQuantity={(uuid, value) => this.props.updateQuantity(uuid, value)}
