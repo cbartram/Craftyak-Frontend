@@ -58,3 +58,15 @@
 .MuiPaper-root {
     background-color: #fafafa !important;
 }
+
+.font-sm {
+    font-size: 14px;
+    font-weight: 200;
+    color: #666;
+}
+
+.margin-custom {
+    margin-top: calc(1.5rem + 45px);
+    margin-bottom: 1.5rem;
+}
+

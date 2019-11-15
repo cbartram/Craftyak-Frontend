@@ -2,8 +2,7 @@ import {
     ADD_TO_CART,
     CREATE_ORDER_FAILURE,
     CREATE_ORDER_REQUEST,
-    CREATE_ORDER_SUCCESS, CREATE_PAYMENT_FAILURE,
-    CREATE_PAYMENT_REQUEST, CREATE_PAYMENT_SUCCESS,
+    CREATE_ORDER_SUCCESS,
     REMOVE_ALL_FROM_CART,
     REMOVE_FROM_CART,
     UPDATE_QUANTITY
@@ -71,24 +70,6 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
             return {
                 ...state,
                 items: [...updatedItems]
-            };
-
-        case CREATE_PAYMENT_REQUEST: {
-            console.log("Creating payment request...");
-            return {
-                ...state,
-                isFetching: true,
-            };
-        }
-        case CREATE_PAYMENT_SUCCESS:
-            return {
-                ...state,
-                isFetching: false,
-            };
-        case CREATE_PAYMENT_FAILURE:
-            return {
-                ...state,
-                isFetching: false,
             };
         case CREATE_ORDER_REQUEST:
             console.log("Creating order request...");

@@ -14,6 +14,7 @@ import {CLIENT_ID} from "../constants";
 import {CLIENT_SECRET} from "../constants";
 import {OAUTH_TOKEN_SUCCESS} from "../constants";
 import {getRequestUrl} from "../constants";
+import {CREATE_PAYMENT_FAILURE} from "../constants";
 
 /**
  * Sends a user's current video information (such as duration completed, started watching etc.) to
@@ -44,9 +45,30 @@ export const getOAuthToken = () => async (dispatch) => {
  * @param payload Object the products that are being created
  * @returns {Function}
  */
-export const createStripePayment = (payload) => async (dispatch, getState) => {
-  await post(payload, constants.CREATE_PAYMENT_ENDPOINT, constants.CREATE_PAYMENT_REQUEST, constants.CREATE_PAYMENT_SUCCESS, constants.CREATE_PAYMENT_FAILURE, dispatch, getState, true);
+export const createStripeSession = (payload) => async (dispatch, getState) => {
+  await post(payload, constants.CREATE_PAYMENT_ENDPOINT, constants.CREATE_PAYMENT_REQUEST, constants.CREATE_PAYMENT_SUCCESS, constants.CREATE_PAYMENT_FAILURE, dispatch, getState);
 };
+
+/**
+ * Dispatches a set of actions to create
+ * a new address in the database and compute shipping and tax calculations
+ * for the parcels
+ * @param payload Object address to create (city, state, zip etc...)
+ * @returns {Function}
+ */
+export const createAddress = (payload) => async (dispatch, getState) => {
+    await post(payload, constants.PERSIST_ADDRESS_ENDPOINT, constants.CREATE_ADDRESS_REQUEST, constants.CREATE_ADDRESS_SUCCESS, constants.CREATE_ADDRESS_FAILURE, dispatch, getState)
+};
+
+/**
+ * Dispatches a stripe payment error
+ * @param message
+ * @returns {{payload: *, type: *}}
+ */
+export const stripeError = (message) => ({
+    type: CREATE_PAYMENT_FAILURE,
+    payload: message
+});
 
 /**
  * Creates a POST request to create a new order

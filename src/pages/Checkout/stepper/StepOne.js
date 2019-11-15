@@ -13,6 +13,22 @@ export const StepOne = (props) => {
     return (
         <div>
             <Header as="h2" className="header-muted">{ props.header }</Header>
+            <Menu>
+                <Menu.Item position="left">
+                    <b>Image</b>
+                </Menu.Item>
+                <Menu.Item position="left">
+                    <b>Item Name</b>
+                </Menu.Item>
+                <Menu.Item>
+                    <b>Price</b>
+                </Menu.Item>
+                <Menu.Item position="right">
+                    <div className="d-flex flex-column">
+                        <b>{props.mutable ? 'Actions' : 'Quantity'}</b>
+                    </div>
+                </Menu.Item>
+            </Menu>
             {
                 props.items.map(product => {
                     return (
@@ -28,22 +44,30 @@ export const StepOne = (props) => {
                             </Menu.Item>
                             <Menu.Item position="right">
                                 <div className="d-flex flex-column">
-                                    <Dropdown
-                                        className="mt-2"
-                                        placeholder="1"
-                                        compact
-                                        selection
-                                        value={product.quantity}
-                                        onChange={(e, data) => props.onUpdateQuantity(product.id, data.value)}
-                                        options={
-                                            times(10, (index) => ({
-                                                key: index + 1,
-                                                text: index + 1,
-                                                value: index + 1,
-                                            }))}
-                                    />
-                                    <Button className="button-link button-link-danger"
-                                            onClick={() => props.onRemove(product.id)}>Remove</Button>
+                                    {
+                                        props.mutable ?
+                                            <div>
+                                                <Dropdown
+                                                    className="mt-2"
+                                                    placeholder="1"
+                                                    compact
+                                                    selection
+                                                    value={product.quantity}
+                                                    onChange={(e, data) => props.onUpdateQuantity(product.id, data.value)}
+                                                    options={
+                                                        times(10, (index) => ({
+                                                            key: index + 1,
+                                                            text: index + 1,
+                                                            value: index + 1,
+                                                        }))}
+                                                />
+                                                <Button className="button-link button-link-danger" onClick={() => props.onRemove(product.id)}>
+                                                    Remove
+                                                </Button>
+                                            </div> :
+                                            product.quantity
+
+                                    }
                                 </div>
                             </Menu.Item>
                         </Menu>
