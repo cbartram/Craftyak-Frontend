@@ -216,7 +216,7 @@ class Checkout extends Component {
         if(this.props.cart.items.length === 0)
             return this.renderEmptyCart();
         return (
-            <div>
+            <div className="px-3">
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                     open={this.props.stripe.error !== null}
