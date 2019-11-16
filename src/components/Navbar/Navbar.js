@@ -8,7 +8,7 @@ import {
     List,
     Image,
     Icon,
-    Search
+    Search, Responsive
 } from 'semantic-ui-react'
 import Logo from '../../resources/images/Crafty_Yak_Logo.png';
 import { removeFromCart } from "../../actions/actions";
@@ -106,6 +106,7 @@ class Navbar extends Component {
                         <img alt="logo" src={Logo} onClick={() => this.props.history.push("/")}/>
                         <span className="cursive-logo ml-2">Crafty Yak</span>
                     </Menu.Item>
+                    <Responsive minWidth={768} style={{ marginLeft: 'auto' }}>
                     <Menu.Menu position="right">
                         <Menu.Item>
                             <Search
@@ -171,6 +172,7 @@ class Navbar extends Component {
                             }
                         </Menu.Item>
                     </Menu.Menu>
+                    </Responsive>
                 </Menu>
             </div>
         );

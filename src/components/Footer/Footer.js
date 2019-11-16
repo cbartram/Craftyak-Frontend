@@ -62,21 +62,21 @@ export default class Footer extends Component {
                 </div>
                 <span className="country-name footer-logo-item-text">United States</span></a></li>
               <li className="footer-item"><a className="id-no-nav" rel="noopener noreferrer"
-                                             href="https://policies.google.com/privacy"
+                                             href="#"
                                              target="_blank">Privacy</a></li>
               <li className="footer-item"><a href="/magazine/google_nest_privacy">Commitment to
                 Privacy</a></li>
               <li className="footer-item"><a className="id-no-nav"
                                              rel="noopener noreferrer"
-                                             href="https://store.google.com/intl/en-US_us/about/device-terms.html"
+                                             href="#"
                                              target="_blank">Sales Terms</a></li>
               <li className="footer-item"><a className="id-no-nav"
                                              rel="noopener noreferrer"
-                                             href="http://www.google.com/intl/en-US_us/policies/terms/"
+                                             href="#"
                                              target="_blank">Terms of Service</a></li>
               <li className="footer-item"><a className="id-no-nav"
                                              rel="noopener noreferrer"
-                                             href="https://careers.google.com/hardware/?&amp;src=Online/Direct/MadebyGoogle"
+                                             href="#"
                                              target="_blank">Careers</a></li>
             </ul>
           </div>

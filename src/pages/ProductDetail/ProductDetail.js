@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import withContainer from '../../components/withContainer';
 import times from 'lodash/times';
 import uniqueId from 'lodash/uniqueId';
@@ -14,7 +14,7 @@ import {
   Select,
   List,
   Sticky,
-  Icon
+  Icon, Responsive
 } from "semantic-ui-react";
 import ImageGallery from 'react-image-gallery';
 import { CirclePicker } from 'react-color';
@@ -134,7 +134,7 @@ class ProductDetail extends Component {
                 <hr />
                 </Sticky>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-3" style={{ marginRight: 30 }}>
                 <Card className="bg-light-blue">
                   <Card.Content header={
                     <div className="d-flex">
@@ -202,6 +202,11 @@ class ProductDetail extends Component {
                       <Button primary onClick={() => this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku)} className="mb-2" disabled={this.state.product.attributes.length + 1 !== Object.keys(this.state.skuMeta).length}>
                         Add to Cart
                       </Button>
+                      <Responsive maxWidth={767}>
+                        <Button as={Link} to="/checkout" primary style={{ minWidth: '100%'}}>
+                          Checkout
+                        </Button>
+                      </Responsive>
                       <span className="text-muted-small">
                           Tax and shipping will be calculated at checkout.
                       </span>

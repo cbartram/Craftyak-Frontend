@@ -8,7 +8,9 @@ import {Link} from "react-router-dom";
 
 const mapStateToProps = state => ({
   auth: state.auth,
+  stripe: state.stripe,
 });
+
 
 class CheckoutSuccess extends Component {
   constructor(props) {

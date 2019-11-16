@@ -85,7 +85,7 @@ class App extends Component {
         if(loading)
             return times(6, (i) => {
                return (
-                   <Card key={i} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 d-flex align-items-stretch m-2">
+                   <Card key={i} className="col-md-3 col-lg-3 offset-md-2 col-sm-5 col-xs-11 d-flex align-items-stretch m-2">
                        <Placeholder>
                            <Placeholder.Image square />
                        </Placeholder>
@@ -152,7 +152,7 @@ class App extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-12 d-none d-sm-block">
                         <div className="box">
                             <img alt="" role="presentation"
                                  src="https://a0.muscache.com/4ea/air/v2/pictures/ea6285d9-5352-4447-b13d-b39bfc92dfe5.jpg?t=c:w1131-h343,r:w1131-h343-sfit,e:fjpg-c75"
