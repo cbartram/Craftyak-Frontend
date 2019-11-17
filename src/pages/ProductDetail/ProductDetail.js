@@ -47,6 +47,7 @@ class ProductDetail extends Component {
     this.state = {
       product: null,
       sku: null,
+      selectedColor:'',
       skuMeta: {}, // Attributes & Quantity for the sku about to be added to the cart
       showErrorMessage: false
     }
@@ -65,7 +66,7 @@ class ProductDetail extends Component {
    */
   onSelectChange(attribute, data) {
       this.setState((prevState) => {
-        const { skuMeta, product } = prevState;
+        const { skuMeta, product, selectedColor } = prevState;
 
         let values = Object.values(skuMeta);
         let keys = Object.keys(skuMeta);
@@ -83,6 +84,18 @@ class ProductDetail extends Component {
 
         const sku = getSKU(product.skus, attributeNames, attributeValues);
         if(sku !== null) {
+          // If its a color attribute also update the selected color prop in state
+          // else it was just a normal dropdown being selected so no need to update the color prop
+          if(attribute.toUpperCase().includes("COLOR")) {
+            return {
+              sku,
+              selectedColor: data.value,
+              skuMeta: {
+                ...prevState.skuMeta,
+                [attribute]: data.value
+              }
+            }
+          }
           return {
             sku,
             skuMeta: {
@@ -159,6 +172,7 @@ class ProductDetail extends Component {
                                 <span>Color</span>
                                 <div className="py-3">
                                   <CirclePicker
+                                      color={this.state.selectedColor}
                                       onChangeComplete={(color) => this.onSelectChange(attribute, { value: color.hex })}
                                       colors={attributeValues.options}
                                   />
