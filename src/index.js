@@ -8,8 +8,10 @@ import * as Apollo from 'apollo-boost';
 import {setContext} from "apollo-link-context";
 import {ApolloClient} from 'apollo-client'
 import {ApolloProvider} from "react-apollo";
+import { Auth0Provider } from "./util/auth0-spa";
+import history from "./util/history";
 import rootReducer from './reducers/rootReducer';
-import Router from './components/Router/Router'
+import CraftyYakRouter from './components/Router/Router'
 import { dispatchProcessMiddleware, dispatchProcess } from './util';
 import {
     DEV_URL,
@@ -19,7 +21,11 @@ import {
     GET_PRODUCTS_SUCCESS,
     GET_PRODUCTS_FAILURE,
     OAUTH_TOKEN_SUCCESS,
-    OAUTH_TOKEN_FAILURE, STRIPE_LIVE_KEY, STRIPE_TEST_KEY
+    OAUTH_TOKEN_FAILURE,
+    STRIPE_LIVE_KEY,
+    STRIPE_TEST_KEY,
+    AUTH0_DOMAIN,
+    AUTH0_CLIENT_ID
 } from './constants'
 import * as serviceWorker from './serviceWorker';
 import {getOAuthToken, getProducts} from "./actions/actions";
@@ -49,6 +55,16 @@ const client = new ApolloClient({
     cache: new Apollo.InMemoryCache()
 });
 
+// A function that routes the user to the right place
+// after login
+const onRedirectCallback = appState => {
+    history.push(
+        appState && appState.targetUrl
+            ? appState.targetUrl
+            : window.location.pathname
+    );
+};
+
 /**
  * Renders the App to the DOM
  * @returns {Promise<void>}
@@ -59,15 +75,22 @@ const render = async () => {
         await dispatchProcess(getProducts(), GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE);
          // TODO Change this to IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY
         ReactDOM.render(
-            <ApolloProvider client={client}>
-                <Provider store={store}>
-                    <StripeProvider apiKey={STRIPE_TEST_KEY}>
-                        <Elements>
-                            <Router/>
-                        </Elements>
-                    </StripeProvider>
-                </Provider>
-            </ApolloProvider>, document.getElementById('root'));
+            <Auth0Provider
+                domain={AUTH0_DOMAIN}
+                client_id={AUTH0_CLIENT_ID}
+                redirect_uri={window.location.origin}
+                onRedirectCallback={onRedirectCallback}
+            >
+                <ApolloProvider client={client}>
+                    <Provider store={store}>
+                        <StripeProvider apiKey={STRIPE_TEST_KEY}>
+                            <Elements>
+                                <CraftyYakRouter/>
+                            </Elements>
+                        </StripeProvider>
+                    </Provider>
+                </ApolloProvider>
+            </Auth0Provider>, document.getElementById('root'));
     } catch(error) {
         console.log("[Error] There was an issue loading the App: ", error);
         ReactDOM.render(
@@ -75,7 +98,7 @@ const render = async () => {
                 <Provider store={store}>
                     <StripeProvider apiKey="pk_test_AIs6RYV3qrxG6baDpohxn1L7">
                         <Elements>
-                            <Router/>
+                            <CraftyYakRouter />
                         </Elements>
                     </StripeProvider>
                 </Provider>

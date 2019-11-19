@@ -14,6 +14,7 @@ import Logo from '../../resources/images/Crafty_Yak_Logo.png';
 import { removeFromCart } from "../../actions/actions";
 import { matchSearchQuery } from "../../util";
 import { Link, withRouter } from 'react-router-dom';
+import { Auth0Context } from "../../util/auth0-spa";
 import './Navbar.css';
 
 const mapStateToProps = (state) => ({
@@ -44,6 +45,9 @@ class Navbar extends Component {
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.handleResultSelect = this.handleResultSelect.bind(this);
     }
+
+    static contextType = Auth0Context;
+
 
     componentDidMount() {
         this.setState({ data: this.props.products.items });
@@ -99,6 +103,7 @@ class Navbar extends Component {
     }
 
     render() {
+        const { isAuthenticated, loginWithRedirect, logout } = this.context;
         return (
             <div>
                 <Menu stackable className="menu-navbar">
@@ -170,6 +175,15 @@ class Navbar extends Component {
                                     Checkout
                                 </Button>
                             }
+                        </Menu.Item>
+                        <Menu.Item>
+                            {!isAuthenticated && <Button primary onClick={() => loginWithRedirect({})}>Log in</Button>}
+                        </Menu.Item>
+                        <Menu.Item>
+                            {isAuthenticated && <Link to="/admin/dashboard">Admin Dashboard</Link>}
+                        </Menu.Item>
+                        <Menu.Item>
+                            {isAuthenticated && <Button primary onClick={() => logout()}>Logout</Button>}
                         </Menu.Item>
                     </Menu.Menu>
                     </Responsive>
