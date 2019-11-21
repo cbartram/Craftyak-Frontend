@@ -114,17 +114,21 @@ class Navbar extends Component {
                     <Responsive minWidth={768} style={{ marginLeft: 'auto' }}>
                     <Menu.Menu position="right">
                         <Menu.Item>
-                            <Search
-                                className="global-search"
-                                placeholder="Search"
-                                loading={this.state.isLoading}
-                                onResultSelect={(e, f) => this.handleResultSelect(e, f)}
-                                onSearchChange={debounce(this.handleSearchChange, 300, { leading: true })}
-                                results={this.state.results}
-                                value={this.state.value}
-                                resultRenderer={(item) => this.renderSearchRow(item)}
-                            />
+                            {
+                                !isAuthenticated &&
+                                <Search
+                                    className="global-search"
+                                    placeholder="Search"
+                                    loading={this.state.isLoading}
+                                    onResultSelect={(e, f) => this.handleResultSelect(e, f)}
+                                    onSearchChange={debounce(this.handleSearchChange, 300, {leading: true})}
+                                    results={this.state.results}
+                                    value={this.state.value}
+                                    resultRenderer={(item) => this.renderSearchRow(item)}
+                                />
+                            }
                         </Menu.Item>
+                        { !isAuthenticated &&
                         <Menu.Item>
                             <Dropdown
                                 item
@@ -168,22 +172,24 @@ class Navbar extends Component {
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Menu.Item>
+                        }
                         <Menu.Item>
                             {
-                                this.props.history.location.pathname !== '/checkout' &&
+                                !isAuthenticated && this.props.history.location.pathname !== '/checkout' &&
                                 <Button as={Link} to="/checkout" primary className="pill">
                                     Checkout
                                 </Button>
                             }
                         </Menu.Item>
                         <Menu.Item>
-                            {!isAuthenticated && <Button primary onClick={() => loginWithRedirect({})}>Log in</Button>}
-                        </Menu.Item>
-                        <Menu.Item>
                             {isAuthenticated && <Link to="/admin/dashboard">Admin Dashboard</Link>}
                         </Menu.Item>
                         <Menu.Item>
-                            {isAuthenticated && <Button primary onClick={() => logout()}>Logout</Button>}
+                            {isAuthenticated &&
+                            <Button primary style={{minWidth: 0}} icon onClick={() => logout()}>
+                                <Icon name="sign-out" />
+                            </Button>
+                            }
                         </Menu.Item>
                     </Menu.Menu>
                     </Responsive>
