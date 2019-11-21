@@ -6,7 +6,6 @@ import NotFound from '../../pages/NotFound/NotFound';
 import Checkout from "../../pages/Checkout/Checkout";
 import ProductDetail from "../../pages/ProductDetail/ProductDetail";
 import CheckoutSuccess from "../../pages/CheckoutSuccess/CheckoutSuccess";
-import AdminLogin from "../../pages/AdminLogin/AdminLogin";
 import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard";
 import history from '../../util/history';
 import PrivateRoute from "../PrivateRoute";

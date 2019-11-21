@@ -60,6 +60,16 @@ export const createAddress = (payload) => async (dispatch, getState) => {
     await post(payload, constants.PERSIST_ADDRESS_ENDPOINT, constants.CREATE_ADDRESS_REQUEST, constants.CREATE_ADDRESS_SUCCESS, constants.CREATE_ADDRESS_FAILURE, dispatch, getState)
 };
 
+
+/**
+ * Retrieves all active orders that have not yet been fulfilled but payment has been
+ * made for Erika to ship out!
+ * @returns {Function}
+ */
+export const getOrders = () => async (dispatch, getState) => {
+  await get(constants.GET_ORDERS_ENDPOIMT, constants.ADMIN_GET_ORDERS_REQUEST, constants.ADMIN_GET_ORDERS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState);
+};
+
 /**
  * Dispatches a stripe payment error
  * @param message
