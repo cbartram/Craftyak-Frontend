@@ -212,6 +212,36 @@ class Checkout extends Component {
         }
     }
 
+    /**
+     * Computes the subtotal for the order
+     * @returns {string}
+     */
+    getSubTotal(formatted = false) {
+        const { price } = this.props.cart.items.reduce((prev, curr) => ({price: (curr.price * curr.quantity) + prev.price,}), {
+            price: 0,
+            quantity: 0
+        });
+
+        if(formatted) {
+            return (price / 100).toFixed(2);
+        }
+
+        return price;
+    }
+
+    /**
+     * Computes the total cost with tax and shipping
+     * @returns {string}
+     */
+    getTotal(formatted = false) {
+        const total = this.props.stripe.address.tax + this.props.stripe.address.shippingCost + this.getSubTotal();
+        if(formatted) {
+            return (total / 100).toFixed(2);
+        }
+
+        return total;
+    }
+
     render() {
         if(this.props.cart.items.length === 0)
             return this.renderEmptyCart();
@@ -257,9 +287,7 @@ class Checkout extends Component {
                                 <div className="d-flex">
                                     <span className="font-sm">Subtotal</span>
                                     <span className="ml-auto font-sm">
-                                        ${
-                                            (this.props.cart.items.reduce((prev, curr) => ({ price: (curr.price * curr.quantity) + prev.price, }), { price: 0, quantity: 0 }).price / 100).toFixed(2)
-                                        }
+                                        ${ this.getSubTotal(true) }
                                     </span>
                                 </div>
                                     {
@@ -288,7 +316,7 @@ class Checkout extends Component {
                                         <div className="d-flex flex-row">
                                             <h5 className="mb-3 mt-2">Total</h5>
                                             <h5 className="ml-auto mb-3 mt-2">
-                                            ${(this.props.stripe.address.total / 100).toFixed(2)}
+                                            ${ this.getTotal(true) }
                                             </h5>
                                         </div>
                                     }
