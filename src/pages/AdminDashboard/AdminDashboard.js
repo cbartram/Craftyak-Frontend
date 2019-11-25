@@ -89,6 +89,23 @@ class AdminDashboard extends Component {
         console.log(this);
     }
 
+    /**
+     * Converts a simple object in the format { attributes: { a: b ... } } into the correct structure
+     * for a ReactTable column.
+     * i.e an object with 3 keys would produce [{ Column: key, accessor: attributes.key }, ...] etc.
+     * @param skus Array of objects for skus each with a map property named "attributes"
+     */
+    formatTableColumns(skus) {
+        const arr = [];
+        skus.forEach(sku => {
+            Object.keys(sku.attributes).forEach(attributeKey => {
+                arr.push({ Header: attributeKey, accessor: `attributes.${attributeKey}` })
+            });
+        });
+
+        return arr;
+    }
+
     render() {
         return (
             <div className="row px-3">
@@ -107,7 +124,7 @@ class AdminDashboard extends Component {
                                         loading={this.props.admin.isFetching}
                                         loadingText="Loading Orders"
                                         minRows={3}
-                                        columns={SUB_TABLE_COLUMNS}
+                                        columns={[...SUB_TABLE_COLUMNS, ...this.formatTableColumns(row.original.skus)]}
                                         defaultPageSize={3}
                                         showPagination={false}
                                 />

@@ -91,6 +91,6 @@ export const SUB_TABLE_COLUMNS = [
         Header: 'Quantity',
         accessor: 'quantity',
     }, {
-        Header: 'Stripe SKU Id',
-        accessor: 'stripeSkuId'
+        Header: 'Name',
+        accessor: 'name'
     }];
