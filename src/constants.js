@@ -40,6 +40,7 @@ export const CREATE_PAYMENT_ENDPOINT = '/api/v1/payments/create';
 export const GET_SESSION_ENDPOINT = '/api/v1/payments/session/';
 export const PERSIST_ADDRESS_ENDPOINT = '/api/v1/address/create';
 export const GET_ORDERS_ENDPOIMT = '/api/v1/orders/status/processing';
+export const UPDATE_ORDERS_ENDPOINT = '/api/v1/orders/status/update/'; // The id needs to be appended to this by the calling code
 export const OAUTH_ENDPOINT = '/oauth/token';
 
 // Prod Params
@@ -80,6 +81,9 @@ export const FILTER_PRODUCTS = 'FILTER_PRODUCTS';
 export const ADMIN_GET_ORDERS_REQUEST = 'ADMIN_GET_ORDERS_REQUEST';
 export const ADMIN_GET_ORDERS_FAILURE = 'ADMIN_GET_ORDERS_FAILURE';
 export const ADMIN_GET_ORDERS_SUCCESS = 'ADMIN_GET_ORDERS_SUCCESS';
+export const ADMIN_UPDATE_ORDER_REQUEST = 'ADMIN_UPDATE_ORDER_REQUEST';
+export const ADMIN_UPDATE_ORDER_FAILURE = 'ADMIN_UPDATE_ORDER_FAILURE';
+export const ADMIN_UPDATE_ORDER_SUCCESS = 'ADMIN_UPDATE_ORDER_SUCCESS';
 
 // React Table
 export const SUB_TABLE_COLUMNS = [

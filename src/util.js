@@ -222,6 +222,76 @@ export const post = async (body, path, requestType, successType, failureType, di
 };
 
 /**
+ * Makes a generic PUT request to the API to retrieve, insert, or update
+ * data and dispatches actions to redux to update application state based on the response.
+ * @param body Object the body to be included in the post request
+ * @param path String the API path to POST to. This should begin with a /
+ * @param requestType String the redux dispatch type for making the API request
+ * @param successType String the redux dispatch type when the request is successful
+ * @param failureType String the redux dispatch type when the request has failed.
+ * @param dispatch Function redux dispatch function
+ * @param getState function returns the current state of the application as an object from the redux store
+ * @param debug Boolean true if we should print the http response and false otherwise. Defaults to false
+ * @returns {Promise<*|Promise<any>|undefined>}
+ */
+export const put = async (body, path, requestType, successType, failureType, dispatch, getState, debug = false) => {
+    //If we don't need redux for the action we can just skip the dispatch by setting the actions to null
+    let doDispatch = true;
+    if (isNil(requestType) || isNil(successType) || isNil(failureType)) doDispatch = false;
+
+    doDispatch &&
+    dispatch({
+        type: requestType,
+        payload: body // Sets isFetching to true (useful for unit testing redux)
+    });
+
+    try {
+        const params = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${getState().auth.access_token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(body),
+        };
+
+        const response = await fetch(getRequestUrl(path), params);
+        const responseBody = await (response).json();
+        debug && console.log('[DEBUG] PUT Response: ', responseBody);
+
+        return new Promise((resolve, reject) => {
+            if (response.status >= 200 && response.status <= 210) {
+                doDispatch &&
+                dispatch({
+                    type: successType,
+                    payload: responseBody,
+                });
+
+                resolve(responseBody);
+            } else if (response.statusCode > 210 || typeof response.statusCode === 'undefined') {
+                // An error occurred
+                doDispatch &&
+                dispatch({
+                    type: failureType,
+                    payload: { message: `There was an error retrieving data from the API: ${JSON.stringify(responseBody)}`}
+                });
+
+                reject(responseBody);
+            }
+        });
+    } catch(err) {
+        console.log('[ERROR] Error receiving response from API', err);
+        doDispatch &&
+        dispatch({
+            type: failureType,
+            payload: { message: err.message }
+        });
+    }
+};
+
+
+/**
  * Formats a word by capitalizing the first
  * letter and replacing underscores with spaces
  * @param word String words

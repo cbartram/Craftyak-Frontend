@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import withContainer from "../../components/withContainer";
-import { getOrders } from "../../actions/actions";
+import { getOrders, updateOrders } from "../../actions/actions";
 import {
     SUB_TABLE_COLUMNS
 } from "../../constants";
@@ -17,7 +17,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getOrders: () => dispatch(getOrders())
+    getOrders: () => dispatch(getOrders()),
+    updateOrders: (payload, id) => dispatch(updateOrders(payload, id))
 });
 
 class AdminDashboard extends Component {
@@ -76,14 +77,14 @@ class AdminDashboard extends Component {
                         <Link
                             to={row._original.shippingLabelUrl}
                             rel='noopener noreferrer'
-                            onClick={(event) => {event.preventDefault(); window.open(row._original.shippingLabelUrl);}}
+                            onClick={e => {e.preventDefault(); window.open(row._original.shippingLabelUrl)}}
                             target="_blank">
                             Shipping Label
                         </Link>,
                 },
                 {
                     Header: 'Mark Shipped',
-                    Cell: ({ row }) => <Button primary onClick={() => this.markShipped(row._original)}>Mark Shipped</Button>,
+                    Cell: ({ row }) => <Button loading={this.props.admin.isFetching} primary onClick={() => this.markShipped(row._original)}>Mark Shipped</Button>,
                 }
             ]
         }
@@ -92,12 +93,9 @@ class AdminDashboard extends Component {
         this.props.getOrders();
     }
 
-    printShippingLabel(row) {
-        console.log("Printing Shipping Label: ", row);
-    }
-
     markShipped(row) {
         console.log("Marking Shipped: ", row);
+        this.props.updateOrders({ status: "shipped" }, row.id)
     }
 
     /**

@@ -2,7 +2,7 @@
  * This file defines actions which trigger switch statements in the reducer
  */
 import * as constants from '../constants';
-import { get, post } from '../util';
+import {get, post, put} from '../util';
 import {ADD_TO_CART} from "../constants";
 import {REMOVE_FROM_CART} from "../constants";
 import {UPDATE_SORT_OPTIONS} from "../constants";
@@ -68,6 +68,16 @@ export const createAddress = (payload) => async (dispatch, getState) => {
  */
 export const getOrders = () => async (dispatch, getState) => {
   await get(constants.GET_ORDERS_ENDPOIMT, constants.ADMIN_GET_ORDERS_REQUEST, constants.ADMIN_GET_ORDERS_SUCCESS, constants.GET_PRODUCTS_FAILURE, dispatch, getState);
+};
+
+
+/**
+ * Updates an order status given the orders id and the status to update the
+ * order too. Payload looks like { status: "some_new_status" }
+ * @returns {Function}
+ */
+export const updateOrders = (payload, id) => async (dispatch, getState) => {
+    await put(payload, constants.UPDATE_ORDERS_ENDPOINT + id, constants.ADMIN_UPDATE_ORDER_REQUEST, constants.ADMIN_UPDATE_ORDER_SUCCESS, constants.ADMIN_UPDATE_ORDER_FAILURE, dispatch, getState)
 };
 
 /**
