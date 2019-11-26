@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table'
+import uniqBy from 'lodash/uniqBy';
+import { Link } from "react-router-dom";
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import withContainer from "../../components/withContainer";
@@ -18,75 +20,84 @@ const mapDispatchToProps = dispatch => ({
     getOrders: () => dispatch(getOrders())
 });
 
-// React Table
-export const TABLE_COLUMNS = [
-    {
-        Header: 'Order Number',
-        accessor: 'id'
-    },
-    {
-        Header: 'First Name',
-        accessor: 'address.firstName'
-    },
-    {
-        Header: 'Last Name',
-        accessor: 'address.lastName'
-    },
-    {
-        Header: 'Status',
-        accessor: 'status'
-    },
-    // {
-    //     Header: 'Shipment ID',
-    //     accessor: 'shipmentId'
-    // },
-    // {
-    //     Header: 'Checkout ID',
-    //     accessor: 'stripeCheckoutSessionId'
-    // },
-    {
-        Header: 'Street',
-        accessor: 'address.street'
-    },
-    {
-        Header: 'Unit Number',
-        accessor: 'address.unitNumber'
-    },
-    {
-        Header: 'City',
-        accessor: 'address.city'
-    },
-    {
-        Header: 'State',
-        accessor: 'address.state'
-    },
-    {
-        Header: 'Postal Code',
-        accessor: 'address.zip'
-    },
-    {
-        Header: 'Print Label',
-        Cell: ({ row }) => <Button primary onClick={() => AdminDashboard.printShippingLabel(row.original)}>Shipping Label</Button>,
-    },
-    {
-        Header: 'Mark Shipped',
-        Cell: ({ row }) => <Button primary onClick={() => AdminDashboard.markShipped(row.original)}>Mark Shipped</Button>,
-    }
-];
-
 class AdminDashboard extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            TABLE_COLUMNS: [
+                {
+                    Header: 'Order Number',
+                    accessor: 'id'
+                },
+                {
+                    Header: 'First Name',
+                    accessor: 'address.firstName'
+                },
+                {
+                    Header: 'Last Name',
+                    accessor: 'address.lastName'
+                },
+                {
+                    Header: 'Status',
+                    accessor: 'status'
+                },
+                // {
+                //     Header: 'Shipment ID',
+                //     accessor: 'shipmentId'
+                // },
+                // {
+                //     Header: 'Checkout ID',
+                //     accessor: 'stripeCheckoutSessionId'
+                // },
+                {
+                    Header: 'Street',
+                    accessor: 'address.street'
+                },
+                {
+                    Header: 'Unit Number',
+                    accessor: 'address.unitNumber'
+                },
+                {
+                    Header: 'City',
+                    accessor: 'address.city'
+                },
+                {
+                    Header: 'State',
+                    accessor: 'address.state'
+                },
+                {
+                    Header: 'Postal Code',
+                    accessor: 'address.zip'
+                },
+                {
+                    Header: 'Print Label',
+                    Cell: ({ row }) =>
+                        <Link
+                            to={row._original.shippingLabelUrl}
+                            rel='noopener noreferrer'
+                            onClick={(event) => {event.preventDefault(); window.open(row._original.shippingLabelUrl);}}
+                            target="_blank">
+                            Shipping Label
+                        </Link>,
+                },
+                {
+                    Header: 'Mark Shipped',
+                    Cell: ({ row }) => <Button primary onClick={() => this.markShipped(row._original)}>Mark Shipped</Button>,
+                }
+            ]
+        }
+    }
     componentDidMount() {
         this.props.getOrders();
     }
 
-    static printShippingLabel(row) {
+    printShippingLabel(row) {
         console.log("Printing Shipping Label: ", row);
-        console.log(this);
     }
 
-    static markShipped(row) {
+    markShipped(row) {
         console.log("Marking Shipped: ", row);
-        console.log(this);
     }
 
     /**
@@ -98,12 +109,10 @@ class AdminDashboard extends Component {
     formatTableColumns(skus) {
         const arr = [];
         skus.forEach(sku => {
-            Object.keys(sku.attributes).forEach(attributeKey => {
-                arr.push({ Header: attributeKey, accessor: `attributes.${attributeKey}` })
-            });
+            Object.keys(sku.attributes).forEach(attributeKey => arr.push({Header: attributeKey, accessor: `attributes.${attributeKey}`}));
         });
 
-        return arr;
+        return uniqBy(arr, 'Header');
     }
 
     render() {
@@ -114,7 +123,7 @@ class AdminDashboard extends Component {
                         data={this.props.admin.orders}
                         loading={this.props.admin.isFetching}
                         loadingText="Loading Orders..."
-                        columns={TABLE_COLUMNS}
+                        columns={this.state.TABLE_COLUMNS}
                         minRows={5}
                         SubComponent={row => {
                             return (
