@@ -132,8 +132,6 @@ class AdminDashboard extends Component {
                                         loadingText="Loading Orders"
                                         minRows={3}
                                         columns={[...SUB_TABLE_COLUMNS, ...this.formatTableColumns(row.original.skus)]}
-                                        defaultPageSize={3}
-                                        showPagination={false}
                                 />
                                 </div>
                             );
