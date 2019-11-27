@@ -18,9 +18,27 @@ import groupBy from 'lodash/groupBy';
 export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 }, action) => {
     switch (action.type) {
         case ADD_TO_CART:
+            let foundDup = false;
+            const skus = state.items.map(item => {
+                if(item.id === action.payload.sku.id) {
+                    // The skus are the same simply increase the quantity
+                    foundDup = true;
+                    return {
+                        ...item,
+                        quantity: item.quantity + 1,
+                    }
+                }
+
+                return item;
+            });
+
+            if(!foundDup) {
+                skus.push({ ...action.payload.sku, quantity: action.payload.quantity });
+            }
+
             return {
                 ...state,
-                items: [...state.items, {...action.payload.sku, quantity: action.payload.quantity }]
+                items: [...skus]
             };
         case REMOVE_FROM_CART:
             const data = state.items.map(item => {
