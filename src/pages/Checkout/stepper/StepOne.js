@@ -58,10 +58,10 @@ export const StepOne = (props) => {
                             <Menu.Item>
                                 <List>
                                     {
-                                        Object.keys(product.attributes).map(key => {
+                                        Object.keys(product.attributes).map((key, i) => {
                                             if(key.includes("color")) {
                                                 return (
-                                                    <List.Item>
+                                                    <List.Item key={i}>
                                                         <Label horizontal>
                                                             { key }
                                                         </Label>
@@ -70,7 +70,7 @@ export const StepOne = (props) => {
                                                 )
                                             }
                                             return (
-                                                <List.Item>
+                                                <List.Item key={i}>
                                                     <Label horizontal>
                                                         { key }
                                                     </Label>
