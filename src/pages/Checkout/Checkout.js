@@ -277,7 +277,7 @@ class Checkout extends Component {
                     </div>
                 </div>
                 <div className="row page-bg-gray">
-                    <div className="col-md-5 ml-auto my-4">
+                    <div className="col-md-7 ml-auto my-4">
                         { this.renderStep(this.state.activeStep) }
                     </div>
                     <div className="col-md-4 margin-custom">

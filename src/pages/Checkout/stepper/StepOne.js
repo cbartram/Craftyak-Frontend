@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Dropdown, Header, Image, Menu} from "semantic-ui-react";
+import { TwitterPicker } from 'react-color';
+import { Button, List, Label, Dropdown, Header, Image, Menu } from "semantic-ui-react";
 import times from "lodash/times";
 
 /**
@@ -13,22 +14,6 @@ export const StepOne = (props) => {
     return (
         <div>
             <Header as="h2" className="header-muted">{ props.header }</Header>
-            <Menu>
-                <Menu.Item position="left">
-                    <b>Image</b>
-                </Menu.Item>
-                <Menu.Item position="left">
-                    <b>Item Name</b>
-                </Menu.Item>
-                <Menu.Item>
-                    <b>Price</b>
-                </Menu.Item>
-                <Menu.Item position="right">
-                    <div className="d-flex flex-column">
-                        <b>{props.mutable ? 'Actions' : 'Quantity'}</b>
-                    </div>
-                </Menu.Item>
-            </Menu>
             {
                 props.items.map(product => {
                     return (
@@ -69,6 +54,32 @@ export const StepOne = (props) => {
 
                                     }
                                 </div>
+                            </Menu.Item>
+                            <Menu.Item>
+                                <List>
+                                    {
+                                        Object.keys(product.attributes).map(key => {
+                                            if(key.includes("color")) {
+                                                return (
+                                                    <List.Item>
+                                                        <Label horizontal>
+                                                            { key }
+                                                        </Label>
+                                                        <div className="color-tile" style={{ background: product.attributes[key] }} />
+                                                    </List.Item>
+                                                )
+                                            }
+                                            return (
+                                                <List.Item>
+                                                    <Label horizontal>
+                                                        { key }
+                                                    </Label>
+                                                    { product.attributes[key] }
+                                                </List.Item>
+                                            )
+                                        })
+                                    }
+                                </List>
                             </Menu.Item>
                         </Menu>
                     )

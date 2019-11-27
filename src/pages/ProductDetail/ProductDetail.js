@@ -47,7 +47,7 @@ class ProductDetail extends Component {
     this.state = {
       product: null,
       sku: null,
-      selectedColor:'',
+      selectedColor: '',
       skuMeta: {}, // Attributes & Quantity for the sku about to be added to the cart
       showErrorMessage: false
     }

@@ -70,3 +70,12 @@
     margin-bottom: 1.5rem;
 }
 
+.color-tile {
+    height: 30px;
+    width: 30px;
+    position: relative;
+    outline: none;
+    float: right;
+    border-radius: 4px;
+    margin: 0 6px 6px 0;
+}
