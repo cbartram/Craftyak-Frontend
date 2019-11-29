@@ -56,16 +56,11 @@ export default class Footer extends Component {
               </a></li>
             </ul>
             <ul className="bottom-items">
-              <li className="footer-item"><a href="/regionpicker">
+              <li className="footer-item"><a href="#region">
                 <div className="footer-logo region-flag" region-flags="">
                   <div className="region-flag us-flag" />
                 </div>
                 <span className="country-name footer-logo-item-text">United States</span></a></li>
-              <li className="footer-item"><a className="id-no-nav" rel="noopener noreferrer"
-                                             href="#"
-                                             target="_blank">Privacy</a></li>
-              <li className="footer-item"><a href="/magazine/google_nest_privacy">Commitment to
-                Privacy</a></li>
               <li className="footer-item"><a className="id-no-nav"
                                              rel="noopener noreferrer"
                                              href="#"
@@ -74,10 +69,6 @@ export default class Footer extends Component {
                                              rel="noopener noreferrer"
                                              href="#"
                                              target="_blank">Terms of Service</a></li>
-              <li className="footer-item"><a className="id-no-nav"
-                                             rel="noopener noreferrer"
-                                             href="#"
-                                             target="_blank">Careers</a></li>
             </ul>
           </div>
         </div>

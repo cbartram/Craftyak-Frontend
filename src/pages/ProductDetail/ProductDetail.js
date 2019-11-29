@@ -111,6 +111,25 @@ class ProductDetail extends Component {
       });
   }
 
+
+  /**
+   * Returns a list of images to the carousel based on if an
+   * SKU is selected or not
+   * @returns {{thumbnail: *, original: *}[]|*[]}
+   */
+  getImages() {
+    const baseProductImages = this.state.product.images.map(image => ({ original: image, thumbnail: image }));
+    if(this.state.sku === null)
+      return baseProductImages;
+
+    if(this.state.sku.image === null)
+      return baseProductImages;
+
+    // Return a combination of base product images + the actual skus image but ensure
+    // the sku image is the first one in the list and is actively visible to the customer
+    return [{ original: this.state.sku.image, thumbnail: this.state.sku.image }, ...baseProductImages];
+  }
+
   render() {
       if(this.state.product === null) {
         return null;
@@ -142,7 +161,7 @@ class ProductDetail extends Component {
                 <Sticky context={this.galleryRef}>
                 <ImageGallery
                     showPlayButton={false}
-                    items={this.state.product.images.map(image => ({ original: image, thumbnail: image }))}
+                    items={this.getImages()}
                 />
                 <hr />
                 </Sticky>
