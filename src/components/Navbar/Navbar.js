@@ -87,8 +87,7 @@ class Navbar extends Component {
     }
 
     handleResultSelect(e, { result }) {
-        console.log(result);
-        // TODO This needs to be implemented somehow
+        this.props.history.push(`/product/${result.metadata.slug}`);
     }
 
     /**
