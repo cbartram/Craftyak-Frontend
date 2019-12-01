@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
+import {Loader} from "semantic-ui-react";
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import * as Apollo from 'apollo-boost';
 import {setContext} from "apollo-link-context";
@@ -70,6 +71,11 @@ const onRedirectCallback = appState => {
  * @returns {Promise<void>}
  */
 const render = async () => {
+
+    // Render a loading page immediately while we wait for our content to load
+    ReactDOM.render(<Loader active />,document.getElementById('root'));
+
+
     try {
         await dispatchProcess(getOAuthToken(), OAUTH_TOKEN_SUCCESS, OAUTH_TOKEN_FAILURE);
         await dispatchProcess(getProducts(), GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE);
