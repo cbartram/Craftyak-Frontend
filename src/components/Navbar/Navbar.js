@@ -61,10 +61,10 @@ class Navbar extends Component {
      */
     renderCartItems() {
         if(this.props.cart.items.length === 0)
-            return <Icon name="cart" className="gray-title" />;
+            return <Icon name="cart" className="gray-title" onClick={() => this.props.history.push('/checkout')} />;
         else
             return <div>
-                <Icon name="cart" className="gray-title" />
+                <Icon name="cart" className="gray-title" onClick={() => this.props.history.push('/checkout')} />
                 <span className="badge badge-primary">
                     { this.props.cart.items.reduce((prev, curr) => ({ quantity: curr.quantity + prev.quantity })).quantity }
                  </span>
@@ -77,7 +77,7 @@ class Navbar extends Component {
     renderSearchRow(item) {
         return (
             <div className="d-flex align-items-center px-3 py-2 search-row-item">
-                <Image avatar src={item.images[0]} />
+                {/*<Image avatar height={30} width={30} src={item.images[0]} />*/}
                 <div className="d-flex flex-column">
                     {matchSearchQuery(this.state.value, item.name)}
                     <small className="text-muted">${item.metadata.price}</small>
@@ -129,47 +129,7 @@ class Navbar extends Component {
                         </Menu.Item>
                         { !isAuthenticated &&
                         <Menu.Item>
-                            <Dropdown
-                                item
-                                icon={this.renderCartItems()}
-                                closeOnChange={false}
-                                closeOnBlur
-                                className="cart-dropdown"
-                            >
-                                <Dropdown.Menu>
-                                    <Dropdown.Header content="You're Cart" />
-                                    {
-                                        this.props.cart.items.length === 0 ?
-                                            <Dropdown.Item>
-                                                No items in the cart!
-                                            </Dropdown.Item> :
-                                            this.props.cart.items.map(product => {
-                                                return (
-                                                    <Dropdown.Item key={product.id}>
-                                                        <List relaxed>
-                                                            <List.Item>
-                                                                <Image avatar src={product.images[0]} />
-                                                                <List.Content>
-                                                                    <List.Header as='h4'>
-                                                                        {product.name}
-                                                                        &nbsp;
-                                                                        <Button className="hidden" size="mini" icon onClick={() => this.props.removeFromCart(product.id)}>
-                                                                            <Icon name="x" />
-                                                                        </Button>
-                                                                    </List.Header>
-                                                                    <List.Description>
-                                                                        ${(product.price / 100).toFixed(2)} &nbsp;
-                                                                        <span className="badge badge-primary">{product.quantity}</span>
-                                                                    </List.Description>
-                                                                </List.Content>
-                                                            </List.Item>
-                                                        </List>
-                                                    </Dropdown.Item>
-                                                )
-                                            })
-                                    }
-                                </Dropdown.Menu>
-                            </Dropdown>
+                            { this.renderCartItems() }
                         </Menu.Item>
                         }
                         <Menu.Item>

@@ -80,7 +80,8 @@
 }
 
 .search-row-item:hover {
-    background: #f9fafb;
+    background: #ffffff;
+    text-decoration: underline;
     cursor: pointer;
 }
 
@@ -196,5 +197,9 @@
 
 .dropdown-item:focus {
     color: #576366;
+}
+
+.ui.search>.results .result.active {
+    background: white !important;
 }
 
