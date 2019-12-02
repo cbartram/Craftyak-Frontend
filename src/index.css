@@ -105,3 +105,7 @@ a {
 .ui.modal {
   position: relative !important;
 }
+
+.ui.loader:after {
+  border-color: #6772e5 transparent transparent !important;
+}

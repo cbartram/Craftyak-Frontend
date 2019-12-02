@@ -23,3 +23,12 @@
 .MuiSnackbarContent-root {
     background: rgb(209, 87, 82) !important;
 }
+
+.modal {
+    height: auto !important;
+}
+
+.ui.modal>.content>.image+.description {
+    /*flex: none !important;*/
+    min-width: 350px;
+}

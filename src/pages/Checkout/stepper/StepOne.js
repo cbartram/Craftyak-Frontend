@@ -1,6 +1,6 @@
 import React from 'react';
-import { TwitterPicker } from 'react-color';
-import { Button, List, Label, Dropdown, Header, Image, Menu } from "semantic-ui-react";
+import AttributeLabel from "../../../components/AttributeLabel/AttributeLabel";
+import { Button, List, Dropdown, Header, Image, Menu } from "semantic-ui-react";
 import times from "lodash/times";
 
 /**
@@ -56,30 +56,7 @@ export const StepOne = (props) => {
                                 </div>
                             </Menu.Item>
                             <Menu.Item>
-                                <List>
-                                    {
-                                        Object.keys(product.attributes).map((key, i) => {
-                                            if(key.includes("color")) {
-                                                return (
-                                                    <List.Item key={i}>
-                                                        <Label horizontal>
-                                                            { key }
-                                                        </Label>
-                                                        <div className="color-tile" style={{ background: product.attributes[key] }} />
-                                                    </List.Item>
-                                                )
-                                            }
-                                            return (
-                                                <List.Item key={i}>
-                                                    <Label horizontal>
-                                                        { key }
-                                                    </Label>
-                                                    { product.attributes[key] }
-                                                </List.Item>
-                                            )
-                                        })
-                                    }
-                                </List>
+                                <AttributeLabel attributes={product.attributes} />
                             </Menu.Item>
                         </Menu>
                     )

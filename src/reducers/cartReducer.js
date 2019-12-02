@@ -36,8 +36,14 @@ export default (state = { items: [], isFetching: false, subtotal: 0, total: 0 },
                 skus.push({ ...action.payload.sku, quantity: action.payload.quantity });
             }
 
+            const { price } = skus.reduce((prev, curr) => ({price: (curr.price * curr.quantity) + prev.price,}), {
+                price: 0,
+                quantity: 0
+            });
+
             return {
                 ...state,
+                subtotal: (price / 100).toFixed(2),
                 items: [...skus]
             };
         case REMOVE_FROM_CART:

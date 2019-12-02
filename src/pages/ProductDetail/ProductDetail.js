@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Link, withRouter} from 'react-router-dom';
 import withContainer from '../../components/withContainer';
+import AttributeLabel from "../../components/AttributeLabel/AttributeLabel";
 import times from 'lodash/times';
 import uniqueId from 'lodash/uniqueId';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -14,7 +15,10 @@ import {
   Select,
   List,
   Sticky,
-  Icon, Responsive
+  Icon,
+  Responsive,
+  Modal,
+  Image
 } from "semantic-ui-react";
 import ImageGallery from 'react-image-gallery';
 import { CirclePicker } from 'react-color';
@@ -23,6 +27,7 @@ import {format, formatPrice, getAttributeValues, getSKU} from "../../util";
 
 const mapStateToProps = state => ({
   products: state.products.items,
+  cart: state.cart,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -49,7 +54,8 @@ class ProductDetail extends Component {
       sku: null,
       selectedColor: '',
       skuMeta: {}, // Attributes & Quantity for the sku about to be added to the cart
-      showErrorMessage: false
+      showErrorMessage: false,
+      open: false,
     }
   }
 
@@ -130,6 +136,15 @@ class ProductDetail extends Component {
     return [{ original: this.state.sku.image, thumbnail: this.state.sku.image }, ...baseProductImages];
   }
 
+  addToCart() {
+    // Update redux state with the new items in the cart
+    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku);
+
+    // Show the modal
+    this.setState({ open: true })
+
+  }
+
   render() {
       if(this.state.product === null) {
         return null;
@@ -156,6 +171,49 @@ class ProductDetail extends Component {
                   action={<Icon name="cancel" onClick={() => this.setState({ showErrorMessage: false })} />}
               />
             </Snackbar>
+            <Modal dimmer="blurring" size="small" open={this.state.open} onClose={() => this.setState({ open: false })}>
+              <Modal.Header>Added To Your Cart</Modal.Header>
+              <Modal.Content image>
+                <Image
+                    wrapped
+                    size='medium'
+                    src={this.state.product.images[0]}
+                />
+                <Modal.Description>
+                  <h2>{this.state.product.name}</h2>
+                  {
+                    this.state.sku !== null &&
+                    <AttributeLabel
+                        colorStyle={{
+                          float: 'none',
+                          margin: 0,
+                          paddingTop: 15,
+                          display: 'inline-block'
+                        }}
+                        attributes={this.state.sku.attributes}
+                    />
+                  }
+                  <hr />
+                  <div className="d-flex">
+                    <span className="mr-auto">Cart</span>
+                    <span>{this.props.cart.items.length} item{ this.props.cart.items.length > 1 ? 's' : ''}</span>
+                  </div>
+                  <hr />
+                  <div className="d-flex">
+                    <span className="mr-auto">Subtotal</span>
+                    <span>${this.props.cart.subtotal}</span>
+                  </div>
+                </Modal.Description>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button onClick={() => this.setState({ open: false })}>
+                  Close
+                </Button>
+                <Link to="/checkout" className="btn btn-primary">
+                  View Cart
+                </Link>
+              </Modal.Actions>
+            </Modal>
             <div className="row my-3">
               <div className="col-md-6 offset-md-2 pl-2" ref={this.galleryRef}>
                 <Sticky context={this.galleryRef}>
@@ -232,7 +290,7 @@ class ProductDetail extends Component {
                     />
                     </div>
                     <div className="d-flex flex-column">
-                      <Button primary onClick={() => this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku)} className="mb-2" disabled={this.state.product.attributes.length + 1 !== Object.keys(this.state.skuMeta).length}>
+                      <Button primary onClick={() => this.addToCart()} className="mb-2" disabled={this.state.product.attributes.length + 1 !== Object.keys(this.state.skuMeta).length}>
                         Add to Cart
                       </Button>
                       <Responsive maxWidth={767}>
