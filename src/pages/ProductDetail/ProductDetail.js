@@ -187,6 +187,7 @@ class ProductDetail extends Component {
                         colorStyle={{
                           float: 'none',
                           margin: 0,
+                          height: 20,
                           paddingTop: 15,
                           display: 'inline-block'
                         }}

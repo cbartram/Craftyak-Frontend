@@ -109,3 +109,31 @@ a {
 .ui.loader:after {
   border-color: #6772e5 transparent transparent !important;
 }
+
+.btn-primary {
+  background-color: #6772e5;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  min-height: 1em;
+  outline: 0;
+  border: none;
+  vertical-align: baseline;
+  margin: 0 .25em 0 0;
+  padding: .78571429em 1.5em .78571429em;
+  text-transform: none;
+  text-shadow: none;
+  font-weight: 700;
+  line-height: 1em;
+  font-style: normal;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: #7083f3;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #5d5db8;
+}
