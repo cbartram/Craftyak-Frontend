@@ -106,9 +106,22 @@ class AdminDashboard extends Component {
      */
     formatTableColumns(skus) {
         const arr = [];
+        arr.push({
+            Header: 'Personalizable',
+            accessor: 'personalizable',
+            Cell: ({ row }) => row.personalizable ? 'True' : 'False'
+        });
+
+        arr.push({
+            Header: 'Personal Message',
+            accessor: 'personalMessage'
+        });
+
         skus.forEach(sku => {
+            console.log("Sku being processed: ", sku);
             Object.keys(sku.attributes).forEach(attributeKey => arr.push({Header: attributeKey, accessor: `attributes.${attributeKey}`}));
         });
+
 
         return uniqBy(arr, 'Header');
     }

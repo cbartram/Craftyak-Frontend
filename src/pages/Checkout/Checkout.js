@@ -27,7 +27,7 @@ import {
     STRIPE_TEST_KEY
 } from "../../constants";
 import './Checkout.css';
-const stripe = window.Stripe(IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY);
+const stripe = window.Stripe(STRIPE_TEST_KEY); // TODO When ready do IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
