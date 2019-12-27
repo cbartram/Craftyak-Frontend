@@ -46,6 +46,7 @@ export const getOAuthToken = () => async (dispatch) => {
  * @returns {Function}
  */
 export const createStripeSession = (payload) => async (dispatch, getState) => {
+    console.log("Creating stripe session with payload: ", payload);
   await post(payload, constants.CREATE_PAYMENT_ENDPOINT, constants.CREATE_PAYMENT_REQUEST, constants.CREATE_PAYMENT_SUCCESS, constants.CREATE_PAYMENT_FAILURE, dispatch, getState);
 };
 
@@ -89,15 +90,6 @@ export const stripeError = (message) => ({
     type: CREATE_PAYMENT_FAILURE,
     payload: message
 });
-
-/**
- * Creates a POST request to create a new order
- * @param payload
- * @returns {Function}
- */
-export const checkout = (payload) => async (dispatch, getState) => {
-    await post(payload, constants.CREATE_ORDER_ENDPOINT, constants.CREATE_ORDER_REQUEST, constants.CREATE_ORDER_SUCCESS, constants.CREATE_ORDER_FAILURE, dispatch, getState, false);
-};
 
 /**
  * Action to add a new item to a users cart

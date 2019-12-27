@@ -35,7 +35,6 @@ export const IS_PROD = window.location.hostname !== 'localhost' || process.env.R
 
 //Endpoints
 export const GET_ALL_PRODUCTS_ENDPOINT = '/api/v1/products/';
-export const CREATE_ORDER_ENDPOINT = '/api/v1/orders/create'; // Checkout endpoint
 export const CREATE_PAYMENT_ENDPOINT = '/api/v1/payments/create';
 export const GET_SESSION_ENDPOINT = '/api/v1/payments/session/';
 export const PERSIST_ADDRESS_ENDPOINT = '/api/v1/address/create';

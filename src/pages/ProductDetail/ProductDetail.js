@@ -18,7 +18,9 @@ import {
   Icon,
   Responsive,
   Modal,
-  Image
+  Image,
+  Input,
+  Label,
 } from "semantic-ui-react";
 import ImageGallery from 'react-image-gallery';
 import { CirclePicker } from 'react-color';
@@ -32,11 +34,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateQuantity: (id, value) => dispatch(updateQuantity({ id, value })),
-  addToCart: (quantity, product, sku) => dispatch(addToCart({
+  addToCart: (quantity, product, sku, message) => dispatch(addToCart({
     quantity,
     sku: {
       ...sku,
       name: product.name,
+      personalMessage: message,
       description: product.description,
       images: product.images,
     }
@@ -56,6 +59,8 @@ class ProductDetail extends Component {
       skuMeta: {}, // Attributes & Quantity for the sku about to be added to the cart
       showErrorMessage: false,
       open: false,
+      charsRemaining: 40,
+      personalMessage: null,
     }
   }
 
@@ -138,7 +143,7 @@ class ProductDetail extends Component {
 
   addToCart() {
     // Update redux state with the new items in the cart
-    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku);
+    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku, this.state.personalMessage);
 
     // Show the modal
     this.setState({ open: true })
@@ -193,6 +198,17 @@ class ProductDetail extends Component {
                         }}
                         attributes={this.state.sku.attributes}
                     />
+                  }
+                  {
+                    this.state.product.metadata.personalizable === "true" &&
+                     <List>
+                       <List.Item>
+                         <Label horizontal>
+                           Personal Message
+                         </Label>
+                         {this.state.personalMessage}
+                       </List.Item>
+                     </List>
                   }
                   <hr />
                   <div className="d-flex">
@@ -272,6 +288,20 @@ class ProductDetail extends Component {
                       })
                     }
 
+                    {
+                      this.state.product.metadata.personalizable === "true" &&
+                          <div className="d-flex flex-column">
+                            <span>Personalization</span>
+                            <span className="text-muted-small">
+                                Please include capital letters and punctuation.
+                            </span>
+                            <Input onChange={(e) => this.setState({ personalMessage: e.target.value, charsRemaining: 40 - e.target.value.length }) } className="mt-2" name="personalization" maxLength={40} />
+                            <span className="text-muted-small mb-2">
+                              { this.state.charsRemaining } characters remaining
+                            </span>
+                          </div>
+                    }
+
 
                     <span>Quantity</span>
                     <div>
@@ -338,8 +368,6 @@ class ProductDetail extends Component {
                     </p>
                   </Card.Content>
                 </Card>
-
-
               </div>
             </div>
           </div>

@@ -18,19 +18,16 @@ import withContainer from "../../components/withContainer";
 import {
     createAddress,
     createStripeSession,
-    removeAllFromCart, stripeError,
+    removeAllFromCart,
     updateQuantity
 } from "../../actions/actions";
 import {
-    CREATE_PAYMENT_ENDPOINT,
-    PERSIST_ADDRESS_ENDPOINT,
-    getRequestUrl,
     IS_PROD,
     STRIPE_LIVE_KEY,
     STRIPE_TEST_KEY
 } from "../../constants";
 import './Checkout.css';
-const stripe = window.Stripe(STRIPE_TEST_KEY); // TODO update to IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY
+const stripe = window.Stripe(IS_PROD ? STRIPE_LIVE_KEY : STRIPE_TEST_KEY);
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
@@ -74,9 +71,14 @@ class Checkout extends Component {
      * @returns {Promise<null|any>}
      */
     async persistAddress() {
+        console.log(this.props.cart.items);
         await this.props.createAddress({
             address: this.state.address,
-            skus: this.props.cart.items.map(item => item.id),
+            skus: this.props.cart.items.map(item => ({
+                id: item.id,
+                personalMessage: item.personalMessage,
+                personalizable: item.personalMessage !== null
+            })),
             quantities: this.props.cart.items.map(item => item.quantity)
         });
     }
