@@ -4,9 +4,6 @@ import debounce from 'lodash/debounce';
 import {
     Menu,
     Button,
-    Dropdown,
-    List,
-    Image,
     Icon,
     Search, Responsive
 } from 'semantic-ui-react'
@@ -102,7 +99,7 @@ class Navbar extends Component {
     }
 
     render() {
-        const { isAuthenticated, loginWithRedirect, logout } = this.context;
+        const { isAuthenticated, logout } = this.context;
         return (
             <div>
                 <Menu stackable className="menu-navbar">

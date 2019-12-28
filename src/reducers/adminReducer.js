@@ -5,9 +5,6 @@ import {
     ADMIN_UPDATE_ORDER_FAILURE,
     ADMIN_UPDATE_ORDER_REQUEST,
     ADMIN_UPDATE_ORDER_SUCCESS,
-    OAUTH_TOKEN_FAILURE,
-    OAUTH_TOKEN_SUCCESS,
-    REQUEST_OAUTH_TOKEN
 } from "../constants";
 
 export default (state = {}, action) => {

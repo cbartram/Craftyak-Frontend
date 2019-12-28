@@ -6,6 +6,7 @@ import AttributeLabel from "../../components/AttributeLabel/AttributeLabel";
 import times from 'lodash/times';
 import uniqueId from 'lodash/uniqueId';
 import Snackbar from '@material-ui/core/Snackbar';
+import WebFont from 'webfontloader';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import './ProductDetail.css';
 import {
@@ -26,6 +27,7 @@ import ImageGallery from 'react-image-gallery';
 import { CirclePicker } from 'react-color';
 import { updateQuantity, addToCart } from "../../actions/actions";
 import {format, formatPrice, getAttributeValues, getSKU} from "../../util";
+import {GOOGLE_FONTS_API_KEY} from "../../constants";
 
 const mapStateToProps = state => ({
   products: state.products.items,
@@ -61,13 +63,46 @@ class ProductDetail extends Component {
       open: false,
       charsRemaining: 40,
       personalMessage: null,
+      fonts: [],
+      slicedFonts: [], // A set of 20 fonts sliced from the fonts array to not overwhelm users
+      loadingFonts: true,
+      selectedFont: 'Select a Font'
     }
   }
 
   componentDidMount() {
     // Find the product from the slug
     const product = this.props.products.filter(product => product.metadata.slug === this.props.match.params.slug)[0];
+    this.loadFonts().then(() => console.log("Fonts loaded successfully."));
     this.setState({ product });
+  }
+
+  async loadFonts() {
+    const { items } = await (await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_FONTS_API_KEY}&sort=popularity`)).json();
+    const promises = [];
+    // Format the fonts to be shown in a <Dropdown /> component
+    const formattedFonts = items.map(item => {
+      return {
+        key: item.family,
+        text: item.family,
+        value: item.family,
+        original: item,
+      };
+    });
+
+    WebFont.load({
+      google: {
+        families: [...formattedFonts.slice(0, 20).map(i => i.key)] // Basically just take the font family name
+      }
+    });
+
+    this.setState({ fonts: formattedFonts, slicedFonts: formattedFonts.slice(0, 20), loadingFonts: false });
+    Promise.all(promises).then((results) => {
+      console.log("Fonts loaded: ", results);
+    }).catch(err => {
+      console.log("There was an error loading the fonts: ", err);
+    });
+
   }
 
   /**
@@ -77,7 +112,7 @@ class ProductDetail extends Component {
    */
   onSelectChange(attribute, data) {
       this.setState((prevState) => {
-        const { skuMeta, product, selectedColor } = prevState;
+        const { skuMeta, product } = prevState;
 
         let values = Object.values(skuMeta);
         let keys = Object.keys(skuMeta);
@@ -287,7 +322,6 @@ class ProductDetail extends Component {
                         )
                       })
                     }
-
                     {
                       this.state.product.metadata.personalizable === "true" &&
                           <div className="d-flex flex-column">
@@ -299,10 +333,24 @@ class ProductDetail extends Component {
                             <span className="text-muted-small mb-2">
                               { this.state.charsRemaining } characters remaining
                             </span>
+                            <span>Font</span>
+                            <Dropdown
+                                className="my-3"
+                                text={this.state.selectedFont}
+                                loading={this.state.loadingFonts}
+                            >
+                              <Dropdown.Menu scrolling>
+                                {
+                                  this.state.slicedFonts.map((option) => (
+                                    <Dropdown.Item key={option.value} style={{ fontFamily: option.value }} onClick={() => this.setState({ selectedFont: option.value })}>
+                                      {option.value}
+                                    </Dropdown.Item>
+                                  ))
+                                }
+                              </Dropdown.Menu>
+                            </Dropdown>
                           </div>
                     }
-
-
                     <span>Quantity</span>
                     <div>
                     <Dropdown

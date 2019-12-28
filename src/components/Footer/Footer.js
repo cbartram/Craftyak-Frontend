@@ -63,11 +63,11 @@ export default class Footer extends Component {
                 <span className="country-name footer-logo-item-text">United States</span></a></li>
               <li className="footer-item"><a className="id-no-nav"
                                              rel="noopener noreferrer"
-                                             href="#"
+                                             href="#sales-terms"
                                              target="_blank">Sales Terms</a></li>
               <li className="footer-item"><a className="id-no-nav"
                                              rel="noopener noreferrer"
-                                             href="#"
+                                             href="#terms-of-service"
                                              target="_blank">Terms of Service</a></li>
             </ul>
           </div>

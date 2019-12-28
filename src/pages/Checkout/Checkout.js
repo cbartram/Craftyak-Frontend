@@ -22,8 +22,6 @@ import {
     updateQuantity
 } from "../../actions/actions";
 import {
-    IS_PROD,
-    STRIPE_LIVE_KEY,
     STRIPE_TEST_KEY
 } from "../../constants";
 import './Checkout.css';

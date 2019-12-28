@@ -7,7 +7,6 @@ import {
     REMOVE_FROM_CART,
     UPDATE_QUANTITY
 } from '../constants';
-import groupBy from 'lodash/groupBy';
 
 /**
  * Updates state in redux to describe when a users shopping cart changes

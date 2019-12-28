@@ -1,6 +1,6 @@
 import React from 'react';
 import AttributeLabel from "../../../components/AttributeLabel/AttributeLabel";
-import { Button, List, Dropdown, Header, Image, Menu } from "semantic-ui-react";
+import { Button, Dropdown, Header, Image, Menu } from "semantic-ui-react";
 import times from "lodash/times";
 
 /**

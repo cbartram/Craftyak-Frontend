@@ -3,9 +3,6 @@
  * Constants as the name suggests are constant and never change regardless of state changes.
  * @type {{}}
  */
-import React from 'react';
-import { Button } from "semantic-ui-react";
-
 export const INITIAL_STATE = {};
 
 /**
@@ -51,9 +48,10 @@ export const DEV_URL = 'http://localhost:8080';
 export const AUTH0_DOMAIN = 'craftyyak.auth0.com';
 export const AUTH0_CLIENT_ID = 'U5h0nsMOhmYafW3pTtaGLEshyXAg3ZN5';
 export const STRIPE_TEST_KEY = 'pk_test_CQlUaXE10kegi6hyAZkrZ8eW00t56aaJrN';
-export const STRIPE_LIVE_KEY = 'pk_live_aL4kCEdVxfcdxPZIqtQpsVew00SLgFsg4w';
+// export const STRIPE_LIVE_KEY = 'pk_live_aL4kCEdVxfcdxPZIqtQpsVew00SLgFsg4w';
 export const CLIENT_ID = 'CEdVxfcdxPZIqt1HISBTynP00i2TedzRl';
-export const CLIENT_SECRET = 'Vew00SLgFsg4w14Dv22UxPZIqt1dVxfcd';
+export const CLIENT_SECRET = 'Vew00SLgFsg4w14Dv22UxPZIqt1dVxfcd';// TODO Remove this
+export const GOOGLE_FONTS_API_KEY = 'AIzaSyAYbrqcpP_bGz_Z2-2onvweMaDDm7DI78A';
 
 // Redux Action/Reducer Constants
 export const GET_PRODUCTS_REQUEST = 'GET_PRODUCTS_REQUEST';
