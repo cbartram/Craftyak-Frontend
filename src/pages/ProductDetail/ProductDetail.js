@@ -4,7 +4,9 @@ import {Link, withRouter} from 'react-router-dom';
 import withContainer from '../../components/withContainer';
 import AttributeLabel from "../../components/AttributeLabel/AttributeLabel";
 import times from 'lodash/times';
+import chunk from 'lodash/chunk';
 import uniqueId from 'lodash/uniqueId';
+import isUndefined from 'lodash/isUndefined';
 import Snackbar from '@material-ui/core/Snackbar';
 import WebFont from 'webfontloader';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -64,6 +66,7 @@ class ProductDetail extends Component {
       charsRemaining: 40,
       personalMessage: null,
       fonts: [],
+      currentFontIndex: 0,
       slicedFonts: [], // A set of 20 fonts sliced from the fonts array to not overwhelm users
       loadingFonts: true,
       selectedFont: 'Select a Font'
@@ -77,9 +80,15 @@ class ProductDetail extends Component {
     this.setState({ product });
   }
 
+  /**
+   * Retrieves all 977 fonts from google fonts and formats
+   * them to be compatible with the Semantic ui dropdown. It will
+   * also load the first 20 respective font families into memory which
+   * will be shown initially in the dropdown
+   * @returns {Promise<void>}
+   */
   async loadFonts() {
     const { items } = await (await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_FONTS_API_KEY}&sort=popularity`)).json();
-    const promises = [];
     // Format the fonts to be shown in a <Dropdown /> component
     const formattedFonts = items.map(item => {
       return {
@@ -90,19 +99,40 @@ class ProductDetail extends Component {
       };
     });
 
+    // Loads the first 20 fonts into memory
     WebFont.load({
       google: {
         families: [...formattedFonts.slice(0, 20).map(i => i.key)] // Basically just take the font family name
       }
     });
 
-    this.setState({ fonts: formattedFonts, slicedFonts: formattedFonts.slice(0, 20), loadingFonts: false });
-    Promise.all(promises).then((results) => {
-      console.log("Fonts loaded: ", results);
-    }).catch(err => {
-      console.log("There was an error loading the fonts: ", err);
-    });
+    this.setState({ fonts: chunk(formattedFonts, 20), slicedFonts: formattedFonts.slice(0, 20), loadingFonts: false });
+  }
 
+  /**
+   * When a user scrolls past a certain point the next 20 fonts from
+   * the fonts array will be loaded into memory given the starting index. I.e if the starting
+   * index for fonts to load is 70 then fonts 70-90 are loaded into memory and set in the state
+   * as sliced fonts
+   * @param index Number the index to start slicing fonts from in increments of 20
+   */
+  loadNextFonts(index) {
+    const { fonts, slicedFonts } = this.state;
+    // Take the previously sliced fonts and concat it with the newly sliced fonts so they will appear in the list after the old fonts
+    // We only need to load the new fonts though
+    if(!isUndefined(fonts[index])) {
+      const newFonts = fonts[index];
+      console.log("Loading new fonts: ", newFonts.map(font => font.value));
+      WebFont.load({
+        google: {
+          families: [...newFonts.map(font => font.value)]
+        }
+      });
+
+      this.setState({slicedFonts: [...slicedFonts, ...newFonts]});
+    } else {
+      console.log("No more fonts to load");
+    }
   }
 
   /**
@@ -338,6 +368,13 @@ class ProductDetail extends Component {
                                 className="my-3"
                                 text={this.state.selectedFont}
                                 loading={this.state.loadingFonts}
+                                onScroll={({ target }) => {
+                                  // Load more fonts when we have scrolled past 80% of available fonts to look at
+                                  if(target.scrollTop >= ((target.scrollHeight - 200) * .80)) {
+                                    this.loadNextFonts(this.state.currentFontIndex + 1);
+                                    this.setState((prev) => ({ currentFontIndex: prev.currentFontIndex + 1 }));
+                                  }
+                                }}
                             >
                               <Dropdown.Menu scrolling>
                                 {
