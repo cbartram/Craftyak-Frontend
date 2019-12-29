@@ -38,12 +38,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateQuantity: (id, value) => dispatch(updateQuantity({ id, value })),
-  addToCart: (quantity, product, sku, message) => dispatch(addToCart({
+  addToCart: (quantity, product, sku, message, font) => dispatch(addToCart({
     quantity,
     sku: {
       ...sku,
       name: product.name,
       personalMessage: message,
+      font,
       description: product.description,
       images: product.images,
     }
@@ -208,7 +209,7 @@ class ProductDetail extends Component {
 
   addToCart() {
     // Update redux state with the new items in the cart
-    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku, this.state.personalMessage);
+    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku, this.state.personalMessage, this.state.selectedFont);
 
     // Show the modal
     this.setState({ open: true })
@@ -272,6 +273,12 @@ class ProductDetail extends Component {
                            Personal Message
                          </Label>
                          {this.state.personalMessage}
+                       </List.Item>
+                       <List.Item>
+                         <Label horizontal>
+                           Font
+                         </Label>
+                         <span style={{ fontFamily: this.state.selectedFont }}>{this.state.selectedFont}</span>
                        </List.Item>
                      </List>
                   }
@@ -365,9 +372,10 @@ class ProductDetail extends Component {
                             </span>
                             <span>Font</span>
                             <Dropdown
-                                className="my-3"
+                                className="selection my-3"
                                 text={this.state.selectedFont}
                                 loading={this.state.loadingFonts}
+                                options={[]}
                                 onScroll={({ target }) => {
                                   // Load more fonts when we have scrolled past 80% of available fonts to look at
                                   if(target.scrollTop >= ((target.scrollHeight - 200) * .80)) {

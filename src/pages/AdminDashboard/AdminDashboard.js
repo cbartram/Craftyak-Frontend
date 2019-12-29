@@ -117,6 +117,11 @@ class AdminDashboard extends Component {
             accessor: 'personalMessage'
         });
 
+        arr.push({
+            Header: 'Font',
+            accessor: 'font',
+        });
+
         skus.forEach(sku => {
             console.log("Sku being processed: ", sku);
             Object.keys(sku.attributes).forEach(attributeKey => arr.push({Header: attributeKey, accessor: `attributes.${attributeKey}`}));

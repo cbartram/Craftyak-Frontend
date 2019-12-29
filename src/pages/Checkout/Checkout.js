@@ -74,6 +74,7 @@ class Checkout extends Component {
             address: this.state.address,
             skus: this.props.cart.items.map(item => ({
                 id: item.id,
+                font: item.font,
                 personalMessage: item.personalMessage,
                 personalizable: item.personalMessage !== null
             })),
