@@ -124,7 +124,19 @@ class AdminDashboard extends Component {
 
         skus.forEach(sku => {
             console.log("Sku being processed: ", sku);
-            Object.keys(sku.attributes).forEach(attributeKey => arr.push({Header: attributeKey, accessor: `attributes.${attributeKey}`}));
+            Object.keys(sku.attributes).forEach(attributeKey => {
+                if(attributeKey.includes("color"))
+                    // The cell is different on attributes with "color" in them. We want to replace #00ff00 by highlighting the cell that color
+                    arr.push({
+                        Header: attributeKey,
+                        accessor: `attributes.${attributeKey}`,
+                        Cell: props =>  {
+                            return <div style={{ backgroundColor: props.value, color: props.value, width: 100, height: 20 }} />
+                        }
+                    });
+                else
+                    arr.push({Header: attributeKey, accessor: `attributes.${attributeKey}`})
+            });
         });
 
 

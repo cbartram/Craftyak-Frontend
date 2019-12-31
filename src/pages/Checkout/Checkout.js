@@ -76,9 +76,9 @@ class Checkout extends Component {
                 id: item.id,
                 font: item.font,
                 personalMessage: item.personalMessage,
-                personalizable: item.personalMessage !== null
+                personalizable: item.personalMessage !== null,
+                quantity: item.quantity
             })),
-            quantities: this.props.cart.items.map(item => item.quantity)
         });
     }
 

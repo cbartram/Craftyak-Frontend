@@ -35,7 +35,7 @@ export const GET_ALL_PRODUCTS_ENDPOINT = '/api/v1/products/';
 export const CREATE_PAYMENT_ENDPOINT = '/api/v1/payments/create';
 export const GET_SESSION_ENDPOINT = '/api/v1/payments/session/';
 export const PERSIST_ADDRESS_ENDPOINT = '/api/v1/address/create';
-export const GET_ORDERS_ENDPOIMT = '/api/v1/orders/status/processing';
+export const GET_ORDERS_ENDPOIMT = '/api/v1/orders/status/awaiting_payment'; // TODO change back to processing
 export const UPDATE_ORDERS_ENDPOINT = '/api/v1/orders/status/update/'; // The id needs to be appended to this by the calling code
 export const OAUTH_ENDPOINT = '/oauth/token';
 

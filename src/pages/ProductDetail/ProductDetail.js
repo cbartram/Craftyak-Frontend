@@ -209,11 +209,8 @@ class ProductDetail extends Component {
 
   addToCart() {
     // Update redux state with the new items in the cart
-    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku, this.state.personalMessage, this.state.selectedFont);
-
-    // Show the modal
+    this.props.addToCart(this.state.skuMeta.quantity, this.state.product, this.state.sku, this.state.personalMessage, this.state.selectedFont === 'Select a Font' ? null : this.state.selectedFont);
     this.setState({ open: true })
-
   }
 
   render() {
