@@ -328,7 +328,7 @@ class ProductDetail extends Component {
                     {
                       this.state.product.attributes.map(attribute => {
                         const id = uniqueId();
-                        const attributeValues = getAttributeValues(attribute);
+                        const attributeValues = getAttributeValues(attribute, this.state.product.skus);
                         if(attribute.toUpperCase().includes("COLOR"))
                           return (
                               <div key={id}>
@@ -337,7 +337,7 @@ class ProductDetail extends Component {
                                   <CirclePicker
                                       color={this.state.selectedColor}
                                       onChangeComplete={(color) => this.onSelectChange(attribute, { value: color.hex })}
-                                      colors={attributeValues.options}
+                                      colors={attributeValues}
                                   />
                                 </div>
                               </div>
@@ -349,7 +349,7 @@ class ProductDetail extends Component {
                                 <Select
                                     onChange={(e, data) => this.onSelectChange(attribute, data)}
                                     value={this.state.skuMeta[attribute]} className="my-2"
-                                    placeholder={`Select a ${format(attribute)}`} options={attributeValues.options}
+                                    placeholder={`Select a ${format(attribute)}`} options={attributeValues}
                                 />
                               </div>
                             </div>

@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import isNil from 'lodash/isNil';
+import uniq from 'lodash/uniq';
 import takeRight from 'lodash/takeRight';
 import {getRequestUrl} from "./constants";
 let currentStore;
@@ -318,57 +319,9 @@ export const optionify = (list) => {
  * a list of possible values for that attribute.
  * Size may return ["small", "medium", "large"]
  */
-export const getAttributeValues = (attributeName) => {
-    switch (attributeName.toUpperCase()) {
-        case "SIZE":
-            return {
-                mapsTo: 'size',
-                options: optionify(['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL'])
-            };
-        case "COLOR":
-            return {
-                mapsTo: 'color',
-                options: ["#000000", "#ffffff"]
-            };
-        case "STICKER_COLOR":
-            return {
-                mapsTo: 'sticker_color',
-                options: ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607d8b"],
-            };
-        case "STICKER_TYPE":
-            return {
-                mapsTo: 'sticker_type',
-                options: optionify(['Heat Transfer Vinyl', 'Standard Vinyl'])
-            };
-        case "MUG_MATERIAL":
-            return {
-                mapsTo: 'MUG_MATERIAL',
-                options: optionify(['Ceramic', 'Matte', 'Porcelain'])
-            };
-        case "STYLE":
-            return {
-                mapsTo: 'style',
-                options: [{
-                    key: 'T-Shirt',
-                    value: 't-shirt',
-                    text: 'T-Shirt',
-                }, {
-                    key: 'Tank Top',
-                    value: 'tank',
-                    text: 'Tank Top'
-                }]
-            };
-        case "MATERIAL_SHIRT":
-            return {
-                mapsTo: 'material_shirt',
-                options: optionify(['Cotton', 'Dryfit', 'Nylon', 'Polyester'])
-            };
-        default:
-            return {
-                mapsTo: 'none',
-                options: []
-            }
-    }
+export const getAttributeValues = (attributeName, skus) => {
+    const attributeValues = uniq(skus.map(sku => sku.attributes[attributeName]));
+    return attributeName.toUpperCase().includes("COLOR") ? attributeValues : optionify(attributeValues);
 };
 
 /**
